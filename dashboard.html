@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Log Sesi UPK</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+  <div class="floating-banner">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-2">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-3">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-4">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-5">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-6">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="shell" id="appShell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">UPK Session Logger</p>
+        <h1>Catat sesi pelajar dengan lebih teratur</h1>
+        <p class="lede">
+          Rekod ringkas, pantas, dan tersusun. Semak status, kemaskini, atau padam rekod bila perlu.
+        </p>
+      </div>
+      <div class="hero-meta">
+        <div class="badge" id="currentDate">Hari ini</div>
+        <div class="badge subtle" id="userBadge">Guru: -</div>
+        <button class="ghost" type="button" id="logoutButton">Log keluar</button>
+      </div>
+    </header>
+
+    <section class="stat-grid">
+      <div class="stat-card">
+        <p class="stat-label">Jumlah rekod</p>
+        <div class="stat-value" id="totalCount">0</div>
+        <p class="stat-foot">Semua sesi yang disimpan</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Dalam proses</p>
+        <div class="stat-value" id="inProgressCount">0</div>
+        <p class="stat-foot">Masih dipantau</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Perlu susulan</p>
+        <div class="stat-value" id="followUpCount">0</div>
+        <p class="stat-foot">Set tarikh susulan</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Selesai</p>
+        <div class="stat-value" id="doneCount">0</div>
+        <p class="stat-foot">Sesi ditutup</p>
+      </div>
+    </section>
+
+    <main class="layout">
+      <aside class="side-tabs">
+        <p class="eyebrow">Navigasi</p>
+        <button class="tab-button active" data-target="formSection">Borang Sesi</button>
+        <button class="tab-button" data-target="listSection">Senarai Sesi</button>
+        <button class="tab-button" data-target="statsSection">Statistik</button>
+        <button class="tab-button" data-target="uploadSection">Upload Gambar</button>
+      </aside>
+
+      <div class="content-panels">
+        <section class="panel form-panel" id="formSection">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Borang Sesi</p>
+              <h2>Maklumat pelajar</h2>
+              <p class="hint">Isikan butiran sesi sebelum simpan.</p>
+            </div>
+          </div>
+
+          <form id="sessionForm" class="form-grid">
+            <div class="field">
+              <label for="studentName">Nama murid</label>
+              <input id="studentName" name="studentName" type="text" placeholder="Contoh: Aisyah binti Ahmad" required />
+            </div>
+
+            <div class="field">
+              <label for="className">Kelas/Tingkatan</label>
+              <input id="className" name="className" type="text" placeholder="Contoh: 3 KAA / 5 Sains" required />
+            </div>
+
+            <div class="field">
+              <label for="sessionDate">Tarikh & masa</label>
+              <input id="sessionDate" name="sessionDate" type="datetime-local" required />
+            </div>
+
+            <div class="field">
+              <label for="sessionType">Jenis sesi</label>
+              <select id="sessionType" name="sessionType" required>
+                <option value="">Pilih satu</option>
+                <option>Perbincangan akademik</option>
+                <option>Bimbingan disiplin</option>
+                <option>Kaunseling emosi</option>
+                <option>Rujukan ibu bapa</option>
+                <option>Lain-lain</option>
+              </select>
+            </div>
+
+            <div class="field span-2">
+              <label for="sessionNotes">Ringkasan perbincangan / isu</label>
+              <textarea id="sessionNotes" name="sessionNotes" rows="3" placeholder="Catat apa yang dibincang, isu atau cabaran yang dihadapi" required></textarea>
+            </div>
+
+            <div class="field span-2">
+              <label for="actions">Tindakan/Intervensi</label>
+              <textarea id="actions" name="actions" rows="3" placeholder="Contoh: Tugasan tambahan, panggilan ibu bapa, sesi susulan" required></textarea>
+            </div>
+
+            <div class="field">
+              <label for="status">Status</label>
+              <select id="status" name="status" required>
+                <option value="">Pilih status</option>
+                <option>Dalam proses</option>
+                <option>Selesai</option>
+                <option>Perlu susulan</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="followUp">Tarikh susulan (jika ada)</label>
+              <input id="followUp" name="followUp" type="date" />
+            </div>
+
+            <div class="field">
+              <label for="recordedBy">Dicatat oleh</label>
+              <input id="recordedBy" name="recordedBy" type="text" placeholder="Nama guru" />
+            </div>
+
+            <div class="field">
+              <label for="location">Lokasi sesi</label>
+              <input id="location" name="location" type="text" placeholder="Pejabat UPK / Bilik kaunseling" />
+            </div>
+
+            <div class="actions span-2">
+              <button type="button" class="ghost subtle" id="cancelEdit" hidden>Batal edit</button>
+              <button type="reset" class="ghost">Kosongkan</button>
+              <button type="submit" class="primary" id="submitButton">Simpan sesi</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel log-panel hidden" id="listSection">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Senarai Sesi</p>
+              <h2>Rekod terkini</h2>
+              <p class="hint">Cari mengikut nama murid, kelas, atau status. Edit atau padam rekod jika perlu.</p>
+            </div>
+            <div class="filters">
+              <input id="searchInput" type="search" placeholder="Cari nama / kelas / isu" />
+              <select id="statusFilter">
+                <option value="all">Semua status</option>
+                <option value="Dalam proses">Dalam proses</option>
+                <option value="Selesai">Selesai</option>
+                <option value="Perlu susulan">Perlu susulan</option>
+              </select>
+              <button type="button" class="ghost" id="exportCsv">Export CSV</button>
+              <button type="button" class="ghost danger" id="clearLog">Padam semua</button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tarikh</th>
+                  <th>Nama / Kelas</th>
+                  <th>Jenis & status</th>
+                  <th>Ringkasan & tindakan</th>
+                  <th>Susulan</th>
+                  <th>Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="logBody"></tbody>
+            </table>
+            <div id="emptyState" class="empty">Belum ada rekod. Isi borang untuk menambah.</div>
+          </div>
+        </section>
+
+        <section class="panel hidden" id="statsSection">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Statistik</p>
+              <h2>Gambaran mingguan, bulanan, tahunan</h2>
+              <p class="hint">Kiraan berdasarkan tarikh sesi yang dimasukkan.</p>
+            </div>
+          </div>
+          <div class="filters stats-filters">
+            <div class="field">
+              <label for="statsMonth">Bulan</label>
+              <select id="statsMonth"></select>
+            </div>
+            <div class="field">
+              <label for="statsYear">Tahun</label>
+              <select id="statsYear"></select>
+            </div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <p class="stat-label">Minggu ini</p>
+              <div class="stat-value" id="weeklyTotal">0</div>
+              <p class="stat-foot" id="weeklyFoot">0 dalam proses • 0 susulan • 0 selesai</p>
+            </div>
+            <div class="stat-card">
+              <p class="stat-label">Bulan ini</p>
+              <div class="stat-value" id="monthlyTotal">0</div>
+              <p class="stat-foot" id="monthlyFoot">0 dalam proses • 0 susulan • 0 selesai</p>
+            </div>
+            <div class="stat-card">
+              <p class="stat-label">Tahun ini</p>
+              <div class="stat-value" id="yearlyTotal">0</div>
+              <p class="stat-foot" id="yearlyFoot">0 dalam proses • 0 susulan • 0 selesai</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel hidden" id="uploadSection">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Upload</p>
+              <h2>Simpan gambar sesi</h2>
+              <p class="hint">Muat naik imej berkaitan sesi (disimpan ke Firebase Storage).</p>
+            </div>
+          </div>
+          <div class="upload-box">
+            <input type="file" id="uploadFile" accept="image/*" />
+            <button class="primary" type="button" id="uploadButton">Muat naik</button>
+            <div class="upload-status" id="uploadStatus">Pilih gambar untuk muat naik.</div>
+          </div>
+          <div class="uploads-list" id="uploadsList"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDURmoIpmfcrxG8I6Uf7aBCBsiS-T0Hv8k",
+      authDomain: "upk-log.firebaseapp.com",
+      databaseURL: "https://upk-log-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "upk-log",
+      storageBucket: "upk-log.appspot.com",
+      messagingSenderId: "394230039028",
+      appId: "1:394230039028:web:d7d69ba62d28075684b9a1",
+      measurementId: "G-NV4HLR1NMB"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    const storage = firebase.storage();
+
+    const appShell = document.getElementById('appShell');
+    const logoutButton = document.getElementById('logoutButton');
+    const userBadge = document.getElementById('userBadge');
+    const currentDate = document.getElementById('currentDate');
+    const form = document.getElementById('sessionForm');
+    const submitButton = document.getElementById('submitButton');
+    const cancelEditButton = document.getElementById('cancelEdit');
+    const logBody = document.getElementById('logBody');
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const emptyState = document.getElementById('emptyState');
+    const clearLogButton = document.getElementById('clearLog');
+    const exportCsvButton = document.getElementById('exportCsv');
+    const totalCount = document.getElementById('totalCount');
+    const inProgressCount = document.getElementById('inProgressCount');
+    const followUpCount = document.getElementById('followUpCount');
+    const doneCount = document.getElementById('doneCount');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const panels = {
+      formSection: document.getElementById('formSection'),
+      listSection: document.getElementById('listSection'),
+      statsSection: document.getElementById('statsSection'),
+      uploadSection: document.getElementById('uploadSection')
+    };
+    const weeklyTotal = document.getElementById('weeklyTotal');
+    const weeklyFoot = document.getElementById('weeklyFoot');
+    const monthlyTotal = document.getElementById('monthlyTotal');
+    const monthlyFoot = document.getElementById('monthlyFoot');
+    const yearlyTotal = document.getElementById('yearlyTotal');
+    const yearlyFoot = document.getElementById('yearlyFoot');
+    const statsMonth = document.getElementById('statsMonth');
+    const statsYear = document.getElementById('statsYear');
+    const uploadFile = document.getElementById('uploadFile');
+    const uploadButton = document.getElementById('uploadButton');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const uploadsList = document.getElementById('uploadsList');
+
+    let entries = [];
+    let editingId = null;
+    let currentUser = null;
+    let sessionsQuery = null;
+    let sessionsListener = null;
+    let filteredCache = [];
+    let uploads = [];
+    let uploadsQuery = null;
+    let uploadsListener = null;
+
+    const makeId = () => (crypto.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+
+    const formatDateTime = (value) => {
+      if (!value) return '-';
+      const numeric = typeof value === 'number' ? value : Number(value);
+      const date = Number.isFinite(numeric) ? new Date(numeric) : new Date(value);
+      return date.toLocaleString('ms-MY', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+
+    const detachEntries = () => {
+      if (sessionsQuery && sessionsListener) {
+        sessionsQuery.off('value', sessionsListener);
+      }
+      sessionsQuery = null;
+      sessionsListener = null;
+    };
+
+    const detachUploads = () => {
+      if (uploadsQuery && uploadsListener) {
+        uploadsQuery.off('value', uploadsListener);
+      }
+      uploadsQuery = null;
+      uploadsListener = null;
+    };
+
+    const listenEntries = (uid) => {
+      detachEntries();
+      sessionsQuery = db.ref(`sessions/${uid}`).orderByChild('createdAt');
+      sessionsListener = (snapshot) => {
+        const data = snapshot.val() || {};
+        entries = Object.entries(data).map(([id, value]) => ({
+          ...value,
+          id
+        }));
+        entries.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        render();
+      };
+      sessionsQuery.on('value', sessionsListener, (error) => {
+        console.error('Ralat membaca data:', error);
+      });
+    };
+
+    const listenUploads = (uid) => {
+      detachUploads();
+      uploadsQuery = db.ref(`uploads/${uid}`).orderByChild('createdAt');
+      uploadsListener = (snapshot) => {
+        const data = snapshot.val() || {};
+        uploads = Object.entries(data).map(([id, value]) => ({
+          ...value,
+          id
+        }));
+        uploads.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        renderUploads();
+      };
+      uploadsQuery.on('value', uploadsListener, (error) => {
+        console.error('Ralat membaca uploads:', error);
+      });
+    };
+
+    const startEdit = (id) => {
+      const entry = entries.find((item) => item.id === id);
+      if (!entry) return;
+      editingId = id;
+      form.studentName.value = entry.studentName;
+      form.className.value = entry.className;
+      form.sessionDate.value = entry.sessionDate;
+      form.sessionType.value = entry.sessionType;
+      form.sessionNotes.value = entry.sessionNotes;
+      form.actions.value = entry.actions;
+      form.status.value = entry.status;
+      form.followUp.value = entry.followUp || '';
+      form.recordedBy.value = entry.recordedBy || '';
+      form.location.value = entry.location || '';
+      submitButton.textContent = 'Kemaskini sesi';
+      cancelEditButton.hidden = false;
+      form.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const cancelEdit = () => {
+      editingId = null;
+      submitButton.textContent = 'Simpan sesi';
+      cancelEditButton.hidden = true;
+      form.reset();
+      form.sessionDate.value = '';
+    };
+
+    const deleteEntry = (id) => {
+      const confirmDelete = confirm('Padam rekod ini?');
+      if (!confirmDelete) return;
+      if (!currentUser) return;
+      db.ref(`sessions/${currentUser.uid}/${id}`).remove();
+      if (editingId === id) cancelEdit();
+    };
+
+    const getPeriodCounts = (period) => {
+      const now = new Date();
+      const start = new Date(now);
+      start.setHours(0, 0, 0, 0);
+      if (period === 'week') {
+        const day = start.getDay(); // 0 Sun
+        const diff = (day === 0 ? 6 : day - 1);
+        start.setDate(start.getDate() - diff);
+      } else if (period === 'month') {
+        const selYear = Number(statsYear.value) || now.getFullYear();
+        const selMonth = Number(statsMonth.value); // 0-11
+        start.setFullYear(selYear, selMonth, 1);
+      } else if (period === 'year') {
+        const selYear = Number(statsYear.value) || now.getFullYear();
+        start.setFullYear(selYear, 0, 1);
+      }
+      const stats = { total: 0, inProgress: 0, followUp: 0, done: 0 };
+      entries.forEach((item) => {
+        const d = new Date(item.sessionDate);
+        if (!Number.isFinite(d.getTime())) return;
+        // End boundary for month/year is end of selected month/year, or now if earlier
+        let end = new Date(now);
+        if (period === 'month') {
+          const selYear = start.getFullYear();
+          const selMonth = start.getMonth();
+          end = new Date(selYear, selMonth + 1, 0, 23, 59, 59, 999);
+        } else if (period === 'year') {
+          const selYear = start.getFullYear();
+          end = new Date(selYear, 11, 31, 23, 59, 59, 999);
+        }
+        if (d >= start && d <= end) {
+          stats.total += 1;
+          if (item.status === 'Dalam proses') stats.inProgress += 1;
+          if (item.status === 'Perlu susulan') stats.followUp += 1;
+          if (item.status === 'Selesai') stats.done += 1;
+        }
+      });
+      return stats;
+    };
+
+    const updateStats = () => {
+      const week = getPeriodCounts('week');
+      const month = getPeriodCounts('month');
+      const year = getPeriodCounts('year');
+      const foot = (s) => `${s.inProgress} dalam proses • ${s.followUp} susulan • ${s.done} selesai`;
+      weeklyTotal.textContent = week.total;
+      weeklyFoot.textContent = foot(week);
+      monthlyTotal.textContent = month.total;
+      monthlyFoot.textContent = foot(month);
+      yearlyTotal.textContent = year.total;
+      yearlyFoot.textContent = foot(year);
+    };
+
+    const render = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      const status = statusFilter.value;
+      const filtered = entries.filter((item) => {
+        const matchesStatus = status === 'all' || item.status === status;
+        const matchesQuery =
+          !query ||
+          item.studentName.toLowerCase().includes(query) ||
+          item.className.toLowerCase().includes(query) ||
+          item.sessionNotes.toLowerCase().includes(query) ||
+          item.actions.toLowerCase().includes(query);
+        return matchesStatus && matchesQuery;
+      });
+
+      filteredCache = filtered;
+      logBody.innerHTML = '';
+
+      const total = entries.length;
+      const inProgress = entries.filter((i) => i.status === 'Dalam proses').length;
+      const followUp = entries.filter((i) => i.status === 'Perlu susulan').length;
+      const done = entries.filter((i) => i.status === 'Selesai').length;
+      totalCount.textContent = total;
+      inProgressCount.textContent = inProgress;
+      followUpCount.textContent = followUp;
+      doneCount.textContent = done;
+      updateStats();
+
+      filtered.forEach((item) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            <div class="cell-strong">${formatDateTime(item.sessionDate)}</div>
+            <div class="cell-sub">Dicipta ${formatDateTime(item.createdAt)}</div>
+          </td>
+          <td>
+            <div class="cell-strong">${item.studentName}</div>
+            <div class="cell-sub">${item.className || '-'}</div>
+          </td>
+          <td>
+            <div class="tag tight">${item.sessionType}</div>
+            <div class="status ${item.status.replace(/\\s+/g, '-').toLowerCase()}">${item.status}</div>
+            <div class="cell-sub">${item.recordedBy || 'Guru UPK'}</div>
+          </td>
+          <td>
+            <div class="cell-strong">${item.sessionNotes}</div>
+            <div class="cell-sub">Tindakan: ${item.actions}</div>
+          </td>
+          <td>
+            ${item.followUp ? `<div class="cell-strong">${formatDateTime(item.followUp)}</div>` : '<div class="cell-sub">Tiada susulan</div>'}
+            ${item.location ? `<div class="cell-sub">${item.location}</div>` : ''}
+          </td>
+          <td>
+            <div class="table-actions">
+              <button class="ghost small" data-edit="${item.id}">Edit</button>
+              <button class="ghost danger small" data-delete="${item.id}">Padam</button>
+            </div>
+          </td>
+        `;
+
+        row.querySelector('[data-edit]').addEventListener('click', () => startEdit(item.id));
+        row.querySelector('[data-delete]').addEventListener('click', () => deleteEntry(item.id));
+
+        logBody.appendChild(row);
+      });
+
+      emptyState.style.display = filtered.length ? 'none' : 'flex';
+    };
+
+    const renderUploads = () => {
+      uploadsList.innerHTML = '';
+      if (!uploads.length) {
+        uploadsList.innerHTML = '<div class="empty">Belum ada gambar dimuat naik.</div>';
+        return;
+      }
+      uploads.forEach((item) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'upload-item';
+        wrap.innerHTML = `
+          <div class="upload-meta">
+            <div class="cell-strong">${item.name || 'Tanpa nama'}</div>
+            <div class="cell-sub">${Math.round((item.size || 0) / 1024)} KB • ${formatDateTime(item.createdAt)}</div>
+          </div>
+          <div class="upload-actions">
+            <a class="ghost small" href="${item.url}" target="_blank" rel="noopener noreferrer">Lihat</a>
+          </div>
+        `;
+        uploadsList.appendChild(wrap);
+      });
+    };
+
+    const activateTab = (target) => {
+      tabButtons.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.target === target);
+      });
+      Object.entries(panels).forEach(([key, el]) => {
+        if (!el) return;
+        if (key === target) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const basePayload = {
+        studentName: data.studentName.trim(),
+        className: data.className.trim(),
+        sessionDate: data.sessionDate,
+        sessionType: data.sessionType,
+        sessionNotes: data.sessionNotes.trim(),
+        actions: data.actions.trim(),
+        status: data.status,
+        followUp: data.followUp,
+        recordedBy: data.recordedBy.trim() || (currentUser?.displayName || currentUser?.email || 'Guru UPK'),
+        location: data.location.trim(),
+        uid: currentUser?.uid || ''
+      };
+
+      if (editingId) {
+        db.ref(`sessions/${currentUser.uid}/${editingId}`).update(basePayload);
+      } else {
+        db.ref(`sessions/${currentUser.uid}`).push({
+          ...basePayload,
+          createdAt: firebase.database.ServerValue.TIMESTAMP
+        });
+      }
+
+      cancelEdit();
+    });
+
+    form.addEventListener('reset', () => {
+      cancelEdit();
+    });
+
+    searchInput.addEventListener('input', render);
+    statusFilter.addEventListener('change', render);
+
+    clearLogButton.addEventListener('click', () => {
+      if (!entries.length) return;
+      const confirmClear = confirm('Padam semua rekod sesi?');
+      if (!confirmClear) return;
+      if (!currentUser) return;
+      db.ref(`sessions/${currentUser.uid}`).remove();
+      cancelEdit();
+    });
+
+    exportCsvButton.addEventListener('click', () => {
+      if (!filteredCache.length) {
+        alert('Tiada rekod untuk dieksport.');
+        return;
+      }
+      const escape = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+      const header = [
+        'Tarikh Sesi',
+        'Nama Murid',
+        'Kelas',
+        'Jenis Sesi',
+        'Status',
+        'Ringkasan',
+        'Tindakan',
+        'Susulan',
+        'Dicatat oleh',
+        'Lokasi',
+        'Tarikh Cipta'
+      ];
+      const rows = filteredCache.map((item) => [
+        formatDateTime(item.sessionDate),
+        item.studentName,
+        item.className,
+        item.sessionType,
+        item.status,
+        item.sessionNotes,
+        item.actions,
+        item.followUp ? formatDateTime(item.followUp) : '',
+        item.recordedBy || '',
+        item.location || '',
+        formatDateTime(item.createdAt)
+      ]);
+      const csv = [header, ...rows].map((row) => row.map(escape).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `sessions-${Date.now()}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    });
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => activateTab(btn.dataset.target));
+    });
+
+    const handleUpload = () => {
+      if (!currentUser) {
+        alert('Sila log masuk semula.');
+        return;
+      }
+      const file = uploadFile.files[0];
+      if (!file) {
+        alert('Pilih satu gambar untuk muat naik.');
+        return;
+      }
+      uploadStatus.textContent = 'Memuat naik...';
+      const path = `uploads/${currentUser.uid}/${Date.now()}-${file.name}`;
+      const ref = storage.ref(path);
+      const task = ref.put(file);
+      task.on(
+        'state_changed',
+        (snap) => {
+          const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+          uploadStatus.textContent = `Memuat naik ${pct}%`;
+        },
+        (err) => {
+          console.error(err);
+          uploadStatus.textContent = 'Gagal muat naik.';
+        },
+        async () => {
+          const url = await task.snapshot.ref.getDownloadURL();
+          db.ref(`uploads/${currentUser.uid}`).push({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            url,
+            path,
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+          });
+          uploadStatus.textContent = 'Selesai muat naik.';
+          uploadFile.value = '';
+        }
+      );
+    };
+
+    uploadButton.addEventListener('click', handleUpload);
+
+    const populateMonthYear = () => {
+      const now = new Date();
+      const months = [
+        'Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun',
+        'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'
+      ];
+      statsMonth.innerHTML = months
+        .map((name, idx) => `<option value="${idx}" ${idx === now.getMonth() ? 'selected' : ''}>${name}</option>`)
+        .join('');
+      const currentYear = now.getFullYear();
+      const years = [];
+      for (let y = currentYear + 1; y >= currentYear - 4; y -= 1) {
+        years.push(y);
+      }
+      statsYear.innerHTML = years
+        .map((y) => `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`)
+        .join('');
+    };
+
+    statsMonth.addEventListener('change', updateStats);
+    statsYear.addEventListener('change', updateStats);
+
+    if (logoutButton) {
+      logoutButton.addEventListener('click', () => {
+        auth.signOut().then(() => {
+          detachEntries();
+          detachUploads();
+          window.location.href = 'index.html';
+        });
+      });
+    }
+
+    if (cancelEditButton) {
+      cancelEditButton.addEventListener('click', cancelEdit);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date();
+      currentDate.textContent = today.toLocaleDateString('ms-MY', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      auth.onAuthStateChanged((user) => {
+        if (!user) {
+          window.location.href = 'index.html';
+          return;
+        }
+        currentUser = user;
+        const displayName = user.displayName || user.email || 'Guru UPK';
+        userBadge.textContent = `Guru: ${displayName}`;
+        populateMonthYear();
+        listenEntries(user.uid);
+        listenUploads(user.uid);
+        activateTab('formSection');
+      });
+    });
+  </script>
+</body>
+</html>

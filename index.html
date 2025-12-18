@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log Masuk Guru UPK</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <div class="floating-banner">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-2">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-3">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-4">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-5">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner floating-banner-6">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="auth-shell">
+    <div class="login-grid">
+      <div class="auth-card">
+        <p class="eyebrow">Akses Guru UPK</p>
+        <h2>Log masuk ke rekod sesi</h2>
+        <p class="lede">Gunakan akaun yang diberikan untuk melihat dan menambah rekod pelajar.</p>
+        <form id="loginForm" class="auth-form">
+          <div class="field">
+            <label for="loginEmail">Emel</label>
+            <input id="loginEmail" name="loginEmail" type="email" placeholder="contoh: guru1@upk.edu" required />
+          </div>
+          <div class="field">
+            <label for="loginPassword">Kata laluan</label>
+            <input id="loginPassword" name="loginPassword" type="password" placeholder="Masukkan kata laluan" required />
+          </div>
+          <div class="actions auth-actions">
+            <button type="submit" class="primary">Log masuk</button>
+          </div>
+          <div id="loginError" class="error hidden">Emel atau kata laluan tidak tepat.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDURmoIpmfcrxG8I6Uf7aBCBsiS-T0Hv8k",
+      authDomain: "upk-log.firebaseapp.com",
+      databaseURL: "https://upk-log-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "upk-log",
+      storageBucket: "upk-log.appspot.com",
+      messagingSenderId: "394230039028",
+      appId: "1:394230039028:web:d7d69ba62d28075684b9a1",
+      measurementId: "G-NV4HLR1NMB"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+
+    const goToDashboard = () => {
+      window.location.href = 'dashboard.html';
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          goToDashboard();
+        }
+      });
+
+      loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = loginForm.loginEmail.value.trim();
+        const password = loginForm.loginPassword.value;
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+          loginError.classList.add('hidden');
+          goToDashboard();
+        } catch (error) {
+          loginError.textContent = 'Emel atau kata laluan tidak tepat.';
+          loginError.classList.remove('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
