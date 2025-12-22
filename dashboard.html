@@ -93,7 +93,7 @@
         <p class="eyebrow">Navigasi</p>
         <button class="tab-button active" data-target="formSection">Borang Sesi</button>
         <button class="tab-button" data-target="listSection">Senarai Sesi</button>
-        <button class="tab-button" data-target="statsSection">Statistik</button>
+        <button class="tab-button" data-target="statsSection">Analisa</button>
         <!-- <button class="tab-button" data-target="uploadSection">Upload Gambar</button> -->
       </aside>
 
@@ -274,7 +274,7 @@
         <section class="panel hidden" id="statsSection">
           <div class="panel-header">
             <div>
-              <p class="eyebrow">Statistik</p>
+              <p class="eyebrow">Analisa</p>
               <h2>Gambaran mingguan, bulanan, tahunan</h2>
               <p class="hint">Kiraan berdasarkan tarikh sesi yang dimasukkan.</p>
             </div>
@@ -813,6 +813,8 @@
       if (!entries.length) return;
       const confirmClear = confirm('Padam semua rekod sesi?');
       if (!confirmClear) return;
+      const confirmSecond = confirm('Yakin padam semua rekod?');
+      if (!confirmSecond) return;
       if (!currentUser) return;
       db.ref(`sessions/${currentUser.uid}`).remove();
       cancelEdit();
@@ -930,13 +932,10 @@
       statsMonth.innerHTML = months
         .map((name, idx) => `<option value="${idx}" ${idx === now.getMonth() ? 'selected' : ''}>${name}</option>`)
         .join('');
-      const currentYear = now.getFullYear();
-      const years = [];
-      for (let y = currentYear + 1; y >= currentYear - 4; y -= 1) {
-        years.push(y);
-      }
-      statsYear.innerHTML = years
-        .map((y) => `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`)
+      const allowedYears = [2026, 2027, 2028, 2029, 2030];
+      const defaultYear = allowedYears.includes(now.getFullYear()) ? now.getFullYear() : allowedYears[0];
+      statsYear.innerHTML = allowedYears
+        .map((y) => `<option value="${y}" ${y === defaultYear ? 'selected' : ''}>${y}</option>`)
         .join('');
     };
 
