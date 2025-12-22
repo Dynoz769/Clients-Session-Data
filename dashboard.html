@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Log Sesi UPK</title>
+  <title>Dashboard | CSD - Clients Session Data</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 </head>
 <body>
-  <div class="floating-banner">UPK KOLEJ VOKASIONAL PASIR MASS</div>
-  <div class="floating-banner floating-banner-2">UPK KOLEJ VOKASIONAL PASIR MASS</div>
-  <div class="floating-banner floating-banner-3">UPK KOLEJ VOKASIONAL PASIR MASS</div>
-  <div class="floating-banner floating-banner-4">UPK KOLEJ VOKASIONAL PASIR MASS</div>
-  <div class="floating-banner floating-banner-5">UPK KOLEJ VOKASIONAL PASIR MASS</div>
-  <div class="floating-banner floating-banner-6">UPK KOLEJ VOKASIONAL PASIR MASS</div>
+  <div class="floating-banner">CSD - CLIENTS SESSION DATA</div>
+  <div class="floating-banner floating-banner-2">CSD - CLIENTS SESSION DATA</div>
+  <div class="floating-banner floating-banner-3">CSD - CLIENTS SESSION DATA</div>
+  <div class="floating-banner floating-banner-4">CSD - CLIENTS SESSION DATA</div>
+  <div class="floating-banner floating-banner-5">CSD - CLIENTS SESSION DATA</div>
+  <div class="floating-banner floating-banner-6">CSD - CLIENTS SESSION DATA</div>
   <div class="shell" id="appShell">
-    <section class="montage-banner" aria-label="Montaj gambar UPK">
+    <section class="montage-banner" aria-label="Montaj gambar CSD">
       <div class="montage-strip">
         <div class="montage-track">
           <div class="montage-frame"><img src="gambar1.jpeg" alt="Moment 1" /></div>
@@ -47,8 +47,8 @@
     </section>
     <header class="hero">
       <div>
-        <p class="eyebrow">UPK Session Logger</p>
-        <h1>Catat sesi pelajar dengan lebih teratur</h1>
+        <p class="eyebrow">CSD - Clients Session Data</p>
+        <h1>CSD - Clients Session Data</h1>
         <p class="lede">
           Rekod ringkas, pantas, dan tersusun. Semak status, kemaskini, atau padam rekod bila perlu.
         </p>
@@ -94,7 +94,7 @@
         <button class="tab-button active" data-target="formSection">Borang Sesi</button>
         <button class="tab-button" data-target="listSection">Senarai Sesi</button>
         <button class="tab-button" data-target="statsSection">Statistik</button>
-        <button class="tab-button" data-target="uploadSection">Upload Gambar</button>
+        <!-- <button class="tab-button" data-target="uploadSection">Upload Gambar</button> -->
       </aside>
 
       <div class="content-panels">
@@ -114,8 +114,40 @@
             </div>
 
             <div class="field">
-              <label for="className">Kelas/Tingkatan</label>
-              <input id="className" name="className" type="text" placeholder="Contoh: 3 KAA / 5 Sains" required />
+              <label for="programCode">Program</label>
+              <select id="programCode" name="programCode" required>
+                <option value="">Pilih program</option>
+                <option value="BKP1">BKP1</option>
+                <option value="BKP2">BKP2</option>
+                <option value="KSK1">KSK1</option>
+                <option value="KSK2">KSK2</option>
+                <option value="BPR1">BPR1</option>
+                <option value="BPR2">BPR2</option>
+                <option value="BPM1">BPM1</option>
+                <option value="BPM2">BPM2</option>
+                <option value="BPP1">BPP1</option>
+                <option value="BPP2">BPP2</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="programLevel">Tahap</label>
+              <select id="programLevel" name="programLevel" required>
+                <option value="">Pilih tahap</option>
+                <option value="SIJIL">SIJIL</option>
+                <option value="DIPLOMA">DIPLOMA</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="programSemester">Semester</label>
+              <select id="programSemester" name="programSemester" required>
+                <option value="">Pilih semester</option>
+                <option value="1">Sem 1</option>
+                <option value="2">Sem 2</option>
+                <option value="3">Sem 3</option>
+                <option value="4">Sem 4</option>
+              </select>
             </div>
 
             <div class="field">
@@ -135,7 +167,7 @@
             </div>
 
             <div class="field" id="recordedByOtherWrap" hidden>
-              <label for="recordedByOther">Kaunselor (lain-lain)</label>
+              <label for="recordedByOther">Rujukan Guru (Jika ada)</label>
               <input id="recordedByOther" name="recordedByOther" type="text" placeholder="Nama kaunselor lain" />
             </div>
 
@@ -188,9 +220,9 @@
             </div>
 
             <div class="field">
-              <label for="location">Lokasi sesi</label>
-              <input id="location" name="location" type="text" placeholder="Pejabat UPK / Bilik kaunseling" />
-            </div>
+            <label for="location">Lokasi sesi</label>
+            <input id="location" name="location" type="text" placeholder="Pejabat CSD / Bilik kaunseling" />
+          </div>
 
             <div class="actions span-2">
               <button type="button" class="ghost subtle" id="cancelEdit" hidden>Batal edit</button>
@@ -205,10 +237,10 @@
             <div>
               <p class="eyebrow">Senarai Sesi</p>
               <h2>Rekod terkini</h2>
-              <p class="hint">Cari mengikut nama murid, kelas, atau status. Edit atau padam rekod jika perlu.</p>
+              <p class="hint">Cari mengikut nama murid, program, atau status. Edit atau padam rekod jika perlu.</p>
             </div>
             <div class="filters">
-              <input id="searchInput" type="search" placeholder="Cari nama / kelas / isu" />
+              <input id="searchInput" type="search" placeholder="Cari nama / program / isu" />
               <select id="statusFilter">
                 <option value="all">Semua status</option>
                 <option value="Dalam proses">Dalam proses</option>
@@ -226,7 +258,7 @@
               <thead>
                 <tr>
                   <th>Tarikh</th>
-                  <th>Nama / Kelas</th>
+                  <th>Nama / Program</th>
                   <th>Jenis / fokus / status</th>
                   <th>Ringkasan & tindakan</th>
                   <th>Susulan</th>
@@ -274,8 +306,44 @@
               <p class="stat-foot" id="yearlyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
             </div>
           </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <p class="eyebrow">Graf status</p>
+                <h3>Status mengikut tempoh</h3>
+              </div>
+              <div class="chart-toggles">
+                <button type="button" class="ghost small chart-toggle active" data-period="week">Minggu</button>
+                <button type="button" class="ghost small chart-toggle" data-period="month">Bulan</button>
+                <button type="button" class="ghost small chart-toggle" data-period="year">Tahun</button>
+              </div>
+            </div>
+            <div class="chart-bars" id="chartBars">
+              <div class="chart-bar" data-key="inProgress">
+                <span class="chart-bar-fill"></span>
+                <span class="chart-label">Dalam proses</span>
+                <span class="chart-value">0</span>
+              </div>
+              <div class="chart-bar" data-key="followUp">
+                <span class="chart-bar-fill"></span>
+                <span class="chart-label">Perlu susulan</span>
+                <span class="chart-value">0</span>
+              </div>
+              <div class="chart-bar" data-key="call">
+                <span class="chart-bar-fill"></span>
+                <span class="chart-label">Perlu di panggil</span>
+                <span class="chart-value">0</span>
+              </div>
+              <div class="chart-bar" data-key="done">
+                <span class="chart-bar-fill"></span>
+                <span class="chart-label">Selesai</span>
+                <span class="chart-value">0</span>
+              </div>
+            </div>
+          </div>
         </section>
 
+        <!--
         <section class="panel hidden" id="uploadSection">
           <div class="panel-header">
             <div>
@@ -291,6 +359,7 @@
           </div>
           <div class="uploads-list" id="uploadsList"></div>
         </section>
+        -->
       </div>
     </main>
   </div>
@@ -323,6 +392,9 @@
     const recordedBySelect = document.getElementById('recordedBy');
     const recordedByOtherWrap = document.getElementById('recordedByOtherWrap');
     const recordedByOther = document.getElementById('recordedByOther');
+    const programCodeSelect = document.getElementById('programCode');
+    const programLevelSelect = document.getElementById('programLevel');
+    const programSemesterSelect = document.getElementById('programSemester');
     const searchInput = document.getElementById('searchInput');
     const statusFilter = document.getElementById('statusFilter');
     const emptyState = document.getElementById('emptyState');
@@ -348,6 +420,8 @@
     const yearlyFoot = document.getElementById('yearlyFoot');
     const statsMonth = document.getElementById('statsMonth');
     const statsYear = document.getElementById('statsYear');
+    const chartBars = document.getElementById('chartBars');
+    const chartToggleButtons = document.querySelectorAll('.chart-toggle');
     const uploadFile = document.getElementById('uploadFile');
     const uploadButton = document.getElementById('uploadButton');
     const uploadStatus = document.getElementById('uploadStatus');
@@ -362,6 +436,7 @@
     let uploads = [];
     let uploadsQuery = null;
     let uploadsListener = null;
+    let chartPeriod = 'week';
 
     const toggleRecordedByOther = () => {
       const isOther = recordedBySelect.value === 'Lain-lain';
@@ -437,9 +512,22 @@
     const startEdit = (id) => {
       const entry = entries.find((item) => item.id === id);
       if (!entry) return;
+      activateTab('formSection');
       editingId = id;
       form.studentName.value = entry.studentName;
-      form.className.value = entry.className;
+      const classValue = entry.className || '';
+      const levelMatch = classValue.match(/(diploma|sijil)/i);
+      const semMatch = classValue.match(/sem\s*(\d)/i);
+      const levelValue = levelMatch ? levelMatch[1].toUpperCase() : '';
+      const semValue = semMatch ? semMatch[1] : '';
+      let programValue = '';
+      const split = classValue.split('-').map((p) => p.trim());
+      if (split[0]) {
+        programValue = split[0];
+      }
+      if (programCodeSelect) programCodeSelect.value = programValue || '';
+      if (programLevelSelect) programLevelSelect.value = levelValue || '';
+      if (programSemesterSelect) programSemesterSelect.value = semValue || '';
       form.sessionDate.value = entry.sessionDate;
       form.sessionType.value = entry.sessionType || '';
       form.serviceFocus.value = entry.serviceFocus || '';
@@ -463,6 +551,9 @@
       form.location.value = entry.location || '';
       submitButton.textContent = 'Kemaskini sesi';
       cancelEditButton.hidden = false;
+      if (form.studentName) {
+        form.studentName.focus();
+      }
       form.scrollIntoView({ behavior: 'smooth' });
     };
 
@@ -473,6 +564,9 @@
       form.reset();
       form.sessionDate.value = '';
       recordedByOther.value = '';
+      if (programCodeSelect) programCodeSelect.value = '';
+      if (programLevelSelect) programLevelSelect.value = '';
+      if (programSemesterSelect) programSemesterSelect.value = '';
       toggleRecordedByOther();
     };
 
@@ -536,6 +630,27 @@
       monthlyFoot.textContent = foot(month);
       yearlyTotal.textContent = year.total;
       yearlyFoot.textContent = foot(year);
+      updateChart(chartPeriod);
+    };
+
+    const updateChart = (period) => {
+      if (!chartBars) return;
+      const statsMap = getPeriodCounts(period);
+      const maxVal = Math.max(statsMap.inProgress, statsMap.followUp, statsMap.call, statsMap.done, 1);
+      chartBars.querySelectorAll('.chart-bar').forEach((bar) => {
+        const key = bar.getAttribute('data-key');
+        const value = statsMap[key] || 0;
+        const fill = bar.querySelector('.chart-bar-fill');
+        const valueEl = bar.querySelector('.chart-value');
+        const pct = (value / maxVal) * 100;
+        fill.style.height = `${Math.max(pct, 8)}%`;
+        fill.style.opacity = value === 0 ? 0.25 : 1;
+        valueEl.textContent = value;
+      });
+      chartToggleButtons.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.period === period);
+      });
+      chartPeriod = period;
     };
 
     const render = () => {
@@ -584,7 +699,7 @@
             <div class="tag tight">${item.sessionType}</div>
             <div class="status ${item.status.replace(/\\s+/g, '-').toLowerCase()}">${item.status}</div>
             <div class="cell-sub">Fokus: ${item.serviceFocus || '-'}</div>
-            <div class="cell-sub">Kaunselor: ${item.recordedBy || 'Guru UPK'}</div>
+            <div class="cell-sub">Kaunselor: ${item.recordedBy || 'Staf CSD'}</div>
           </td>
           <td>
             <div class="cell-strong">${item.sessionNotes}</div>
@@ -612,6 +727,7 @@
     };
 
     const renderUploads = () => {
+      if (!uploadsList) return;
       uploadsList.innerHTML = '';
       if (!uploads.length) {
         uploadsList.innerHTML = '<div class="empty">Belum ada gambar dimuat naik.</div>';
@@ -651,11 +767,15 @@
       event.preventDefault();
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
+      const programCode = data.programCode || '';
+      const programLevel = (data.programLevel || '').toUpperCase();
+      const programSemester = data.programSemester ? `Sem ${data.programSemester}` : '';
+      const classCombined = [programCode, programLevel, programSemester].filter(Boolean).join(' - ');
       const recordedByValueRaw = data.recordedBy === 'Lain-lain' ? data.recordedByOther : data.recordedBy;
-      const recordedByValue = (recordedByValueRaw || '').trim() || (currentUser?.displayName || currentUser?.email || 'Guru UPK');
+      const recordedByValue = (recordedByValueRaw || '').trim() || (currentUser?.displayName || currentUser?.email || 'Staf CSD');
       const basePayload = {
         studentName: data.studentName.trim(),
-        className: data.className.trim(),
+        className: classCombined,
         sessionDate: data.sessionDate,
         sessionType: data.sessionType,
         serviceFocus: data.serviceFocus.trim(),
@@ -707,7 +827,7 @@
       const header = [
         'Tarikh Sesi',
         'Nama Murid',
-        'Kelas',
+        'Program / Tahap / Sem',
         'Jenis Sesi',
         'Fokus Perkhidmatan',
         'Status',
@@ -748,7 +868,16 @@
       btn.addEventListener('click', () => activateTab(btn.dataset.target));
     });
 
+    chartToggleButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const period = btn.dataset.period || 'week';
+        chartPeriod = period;
+        updateChart(period);
+      });
+    });
+
     const handleUpload = () => {
+      if (!uploadFile || !uploadStatus) return;
       if (!currentUser) {
         alert('Sila log masuk semula.');
         return;
@@ -788,7 +917,9 @@
       );
     };
 
-    uploadButton.addEventListener('click', handleUpload);
+    if (uploadButton) {
+      uploadButton.addEventListener('click', handleUpload);
+    }
 
     const populateMonthYear = () => {
       const now = new Date();
@@ -842,7 +973,7 @@
           return;
         }
         currentUser = user;
-        const displayName = user.displayName || user.email || 'Guru UPK';
+        const displayName = user.displayName || user.email || 'Staf CSD';
         userBadge.textContent = `Guru: ${displayName}`;
         populateMonthYear();
         listenEntries(user.uid);
