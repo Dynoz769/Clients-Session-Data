@@ -114,6 +114,21 @@
             </div>
 
             <div class="field">
+              <label for="studentId">No Kad Pengenalan</label>
+              <input id="studentId" name="studentId" type="text" placeholder="Contoh: 010203040567" />
+            </div>
+
+            <div class="field">
+              <label for="phone">No telefon</label>
+              <input id="phone" name="phone" type="tel" placeholder="Contoh: 012-3456789" />
+            </div>
+
+            <div class="field">
+              <label for="referenceNumber">Nombor rujukan</label>
+              <input id="referenceNumber" name="referenceNumber" type="text" placeholder="Auto: UPK2026/01" readonly />
+            </div>
+
+            <div class="field">
               <label for="programCode">Program</label>
               <select id="programCode" name="programCode" required>
                 <option value="">Pilih program</option>
@@ -400,6 +415,20 @@
         </div>
         <div class="print-row two-col">
           <div class="print-item">
+            <div class="print-label">Nombor rujukan</div>
+            <div class="print-value" id="printReference"></div>
+          </div>
+          <div class="print-item">
+            <div class="print-label">No Kad Pengenalan</div>
+            <div class="print-value" id="printStudentId"></div>
+          </div>
+        </div>
+        <div class="print-row">
+          <div class="print-label">No telefon</div>
+          <div class="print-value" id="printPhone"></div>
+        </div>
+        <div class="print-row two-col">
+          <div class="print-item">
             <div class="print-label">Program / Tahap / Sem</div>
             <div class="print-value" id="printProgram"></div>
           </div>
@@ -481,6 +510,9 @@
     const programLevelSelect = document.getElementById('programLevel');
     const programSemesterSelect = document.getElementById('programSemester');
     const searchInput = document.getElementById('searchInput');
+    const studentIdInput = document.getElementById('studentId');
+    const phoneInput = document.getElementById('phone');
+    const referenceNumberInput = document.getElementById('referenceNumber');
     const statusFilter = document.getElementById('statusFilter');
     const emptyState = document.getElementById('emptyState');
     const clearLogButton = document.getElementById('clearLog');
@@ -526,6 +558,9 @@
     const printActions = document.getElementById('printActions');
     const printRecordedBy = document.getElementById('printRecordedBy');
     const printCreatedAt = document.getElementById('printCreatedAt');
+    const printReference = document.getElementById('printReference');
+    const printStudentId = document.getElementById('printStudentId');
+    const printPhone = document.getElementById('printPhone');
 
     let entries = [];
     let editingId = null;
@@ -557,6 +592,39 @@
         hour: '2-digit',
         minute: '2-digit'
       });
+    };
+
+    const parseReferenceNumber = (ref) => {
+      if (!ref) return null;
+      const match = String(ref).match(/UPK(\d{4})\/(\d{1,})/i);
+      if (!match) return null;
+      const year = Number(match[1]);
+      const seq = Number(match[2]);
+      if (!Number.isFinite(year) || !Number.isFinite(seq)) return null;
+      return { year, seq };
+    };
+
+    const getNextReferenceNumber = (sessionDateValue) => {
+      const baseDate = sessionDateValue ? new Date(sessionDateValue) : new Date();
+      const year = Number.isFinite(baseDate.getFullYear()) ? baseDate.getFullYear() : new Date().getFullYear();
+      const maxSeq = entries.reduce((max, item) => {
+        const parsed = parseReferenceNumber(item.referenceNumber);
+        if (parsed && parsed.year === year) {
+          return Math.max(max, parsed.seq);
+        }
+        return max;
+      }, 0);
+      const nextSeq = String(maxSeq + 1).padStart(2, '0');
+      return `UPK${year}/${nextSeq}`;
+    };
+
+    const prefillReferenceNumber = (force = false) => {
+      if (!referenceNumberInput || editingId) return;
+      const dateValue = form.sessionDate.value || Date.now();
+      const hasValue = referenceNumberInput.value.trim().length > 0;
+      if (force || !hasValue) {
+        referenceNumberInput.value = getNextReferenceNumber(dateValue);
+      }
     };
 
     const detachEntries = () => {
@@ -635,6 +703,9 @@
       form.actions.value = entry.actions;
       form.status.value = entry.status;
       form.followUp.value = entry.followUp || '';
+      if (studentIdInput) studentIdInput.value = entry.studentId || '';
+      if (phoneInput) phoneInput.value = entry.phone || '';
+      if (referenceNumberInput) referenceNumberInput.value = entry.referenceNumber || getNextReferenceNumber(entry.sessionDate);
       const counselorValue = entry.recordedBy || '';
       const optionValues = Array.from(recordedBySelect.options).map((opt) => opt.value);
       if (counselorValue && optionValues.includes(counselorValue)) {
@@ -664,10 +735,14 @@
       form.reset();
       form.sessionDate.value = '';
       recordedByOther.value = '';
+      if (studentIdInput) studentIdInput.value = '';
+      if (phoneInput) phoneInput.value = '';
+      if (referenceNumberInput) referenceNumberInput.value = '';
       if (programCodeSelect) programCodeSelect.value = '';
       if (programLevelSelect) programLevelSelect.value = '';
       if (programSemesterSelect) programSemesterSelect.value = '';
       toggleRecordedByOther();
+      prefillReferenceNumber();
     };
 
     const deleteEntry = (id) => {
@@ -759,6 +834,9 @@
     const showPrintSheet = (entry) => {
       if (!printSheet) return;
       setPrintValue(printStudent, entry.studentName);
+      setPrintValue(printReference, entry.referenceNumber || '-');
+      setPrintValue(printStudentId, entry.studentId || '-');
+      setPrintValue(printPhone, entry.phone || '-');
       setPrintValue(printProgram, entry.className || '-');
       setPrintValue(printSessionDate, formatDateTime(entry.sessionDate));
       setPrintValue(printSessionType, entry.sessionType || '-');
@@ -793,6 +871,9 @@
           !query ||
           item.studentName.toLowerCase().includes(query) ||
           item.className.toLowerCase().includes(query) ||
+          (item.studentId || '').toLowerCase().includes(query) ||
+          (item.phone || '').toLowerCase().includes(query) ||
+          (item.referenceNumber || '').toLowerCase().includes(query) ||
           (item.serviceFocus || '').toLowerCase().includes(query) ||
           (item.recordedBy || '').toLowerCase().includes(query) ||
           item.sessionNotes.toLowerCase().includes(query) ||
@@ -825,6 +906,9 @@
           <td>
             <div class="cell-strong">${item.studentName}</div>
             <div class="cell-sub">${item.className || '-'}</div>
+            <div class="cell-sub">No KP: ${item.studentId || '-'}</div>
+            <div class="cell-sub">Tel: ${item.phone || '-'}</div>
+            <div class="cell-sub">Ref: ${item.referenceNumber || '-'}</div>
           </td>
           <td>
             <div class="tag tight">${item.sessionType}</div>
@@ -859,6 +943,10 @@
 
         logBody.appendChild(row);
       });
+
+      if (!editingId) {
+        prefillReferenceNumber();
+      }
 
       emptyState.style.display = filtered.length ? 'none' : 'flex';
     };
@@ -910,8 +998,13 @@
       const classCombined = [programCode, programLevel, programSemester].filter(Boolean).join(' - ');
       const recordedByValueRaw = data.recordedBy === 'Lain-lain' ? data.recordedByOther : data.recordedBy;
       const recordedByValue = (recordedByValueRaw || '').trim() || (currentUser?.displayName || currentUser?.email || 'Staf CSD');
+      const referenceNumberValue =
+        (data.referenceNumber || '').trim() || getNextReferenceNumber(data.sessionDate);
       const basePayload = {
         studentName: data.studentName.trim(),
+        studentId: (data.studentId || '').trim(),
+        phone: (data.phone || '').trim(),
+        referenceNumber: referenceNumberValue,
         className: classCombined,
         sessionDate: data.sessionDate,
         sessionType: data.sessionType,
@@ -938,6 +1031,9 @@
     });
 
     recordedBySelect.addEventListener('change', toggleRecordedByOther);
+    if (form.sessionDate) {
+      form.sessionDate.addEventListener('change', () => prefillReferenceNumber(true));
+    }
 
     form.addEventListener('reset', () => {
       cancelEdit();
@@ -959,7 +1055,10 @@
 
     const csvHeader = [
       'Tarikh Sesi',
+      'Nombor Rujukan',
       'Nama Murid',
+      'No Kad Pengenalan',
+      'No Telefon',
       'Program / Tahap / Sem',
       'Jenis Sesi',
       'Fokus Perkhidmatan',
@@ -976,7 +1075,10 @@
       const escape = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
       const rows = items.map((item) => [
         formatDateTime(item.sessionDate),
+        item.referenceNumber || '',
         item.studentName,
+        item.studentId || '',
+        item.phone || '',
         item.className,
         item.sessionType,
         item.serviceFocus || '',
@@ -1128,6 +1230,7 @@
         month: 'long',
         year: 'numeric'
       });
+      prefillReferenceNumber();
 
       auth.onAuthStateChanged((user) => {
         if (!user) {
