@@ -594,6 +594,28 @@
       });
     };
 
+    const escapeHtml = (value) =>
+      String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[ch]);
+
+    // Tarikh tanpa masa (YYYY-MM-DD) dibaca sebagai waktu tempatan, bukan UTC
+    const formatDate = (value) => {
+      if (!value) return '-';
+      const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      const date = match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : new Date(value);
+      if (!Number.isFinite(date.getTime())) return '-';
+      return date.toLocaleDateString('ms-MY', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      });
+    };
+
     const parseReferenceNumber = (ref) => {
       if (!ref) return null;
       const match = String(ref).match(/UPK(\d{4})\/(\d{1,})/i);
@@ -653,6 +675,7 @@
           id
         }));
         entries.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        populateMonthYear();
         render();
       };
       sessionsQuery.on('value', sessionsListener, (error) => {
@@ -749,7 +772,10 @@
       const confirmDelete = confirm('Padam rekod ini?');
       if (!confirmDelete) return;
       if (!currentUser) return;
-      db.ref(`sessions/${currentUser.uid}/${id}`).remove();
+      db.ref(`sessions/${currentUser.uid}/${id}`).remove().catch((error) => {
+        console.error('Ralat memadam rekod:', error);
+        alert('Gagal memadam rekod. Sila cuba lagi.');
+      });
       if (editingId === id) cancelEdit();
     };
 
@@ -762,6 +788,9 @@
         const day = start.getDay(); // 0 Sun
         const diff = (day === 0 ? 6 : day - 1);
         start.setDate(start.getDate() - diff);
+        end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23, 59, 59, 999);
       } else if (period === 'month') {
         const selYear = Number(statsYear.value) || now.getFullYear();
         const selMonth = Number(statsMonth.value); // 0-11
@@ -842,7 +871,7 @@
       setPrintValue(printSessionType, entry.sessionType || '-');
       setPrintValue(printServiceFocus, entry.serviceFocus || '-');
       setPrintValue(printStatus, entry.status || '-');
-      setPrintValue(printFollowUp, entry.followUp ? formatDateTime(entry.followUp) : '-');
+      setPrintValue(printFollowUp, entry.followUp ? formatDate(entry.followUp) : '-');
       setPrintValue(printLocation, entry.location || '-');
       setPrintValue(printNotes, entry.sessionNotes || '-');
       setPrintValue(printActions, entry.actions || '-');
@@ -869,15 +898,15 @@
         const matchesStatus = status === 'all' || item.status === status;
         const matchesQuery =
           !query ||
-          item.studentName.toLowerCase().includes(query) ||
-          item.className.toLowerCase().includes(query) ||
+          (item.studentName || '').toLowerCase().includes(query) ||
+          (item.className || '').toLowerCase().includes(query) ||
           (item.studentId || '').toLowerCase().includes(query) ||
           (item.phone || '').toLowerCase().includes(query) ||
           (item.referenceNumber || '').toLowerCase().includes(query) ||
           (item.serviceFocus || '').toLowerCase().includes(query) ||
           (item.recordedBy || '').toLowerCase().includes(query) ||
-          item.sessionNotes.toLowerCase().includes(query) ||
-          item.actions.toLowerCase().includes(query);
+          (item.sessionNotes || '').toLowerCase().includes(query) ||
+          (item.actions || '').toLowerCase().includes(query);
         return matchesStatus && matchesQuery;
       });
 
@@ -898,37 +927,40 @@
 
       filtered.forEach((item) => {
         const row = document.createElement('tr');
+        const statusText = item.status || '-';
+        const statusClass = (item.status || '').trim().replace(/\s+/g, '-').toLowerCase();
+        const safeId = escapeHtml(item.id);
         row.innerHTML = `
           <td>
             <div class="cell-strong">${formatDateTime(item.sessionDate)}</div>
             <div class="cell-sub">Dicipta ${formatDateTime(item.createdAt)}</div>
           </td>
           <td>
-            <div class="cell-strong">${item.studentName}</div>
-            <div class="cell-sub">${item.className || '-'}</div>
-            <div class="cell-sub">No KP: ${item.studentId || '-'}</div>
-            <div class="cell-sub">Tel: ${item.phone || '-'}</div>
-            <div class="cell-sub">Ref: ${item.referenceNumber || '-'}</div>
+            <div class="cell-strong">${escapeHtml(item.studentName)}</div>
+            <div class="cell-sub">${escapeHtml(item.className || '-')}</div>
+            <div class="cell-sub">No KP: ${escapeHtml(item.studentId || '-')}</div>
+            <div class="cell-sub">Tel: ${escapeHtml(item.phone || '-')}</div>
+            <div class="cell-sub">Ref: ${escapeHtml(item.referenceNumber || '-')}</div>
           </td>
           <td>
-            <div class="tag tight">${item.sessionType}</div>
-            <div class="status ${item.status.replace(/\\s+/g, '-').toLowerCase()}">${item.status}</div>
-            <div class="cell-sub">Fokus: ${item.serviceFocus || '-'}</div>
-            <div class="cell-sub">Kaunselor: ${item.recordedBy || 'Staf CSD'}</div>
+            <div class="tag tight">${escapeHtml(item.sessionType || '-')}</div>
+            <div class="status ${escapeHtml(statusClass)}">${escapeHtml(statusText)}</div>
+            <div class="cell-sub">Fokus: ${escapeHtml(item.serviceFocus || '-')}</div>
+            <div class="cell-sub">Kaunselor: ${escapeHtml(item.recordedBy || 'Staf CSD')}</div>
           </td>
           <td>
-            <div class="cell-strong">${item.sessionNotes}</div>
-            <div class="cell-sub">Tindakan: ${item.actions}</div>
+            <div class="cell-strong">${escapeHtml(item.sessionNotes)}</div>
+            <div class="cell-sub">Tindakan: ${escapeHtml(item.actions)}</div>
           </td>
           <td>
-            ${item.followUp ? `<div class="cell-strong">${formatDateTime(item.followUp)}</div>` : '<div class="cell-sub">Tiada susulan</div>'}
-            ${item.location ? `<div class="cell-sub">${item.location}</div>` : ''}
+            ${item.followUp ? `<div class="cell-strong">${formatDate(item.followUp)}</div>` : '<div class="cell-sub">Tiada susulan</div>'}
+            ${item.location ? `<div class="cell-sub">${escapeHtml(item.location)}</div>` : ''}
           </td>
           <td>
             <div class="table-actions">
-              <button class="ghost small" data-edit="${item.id}">Edit</button>
-              <button class="ghost small" data-print="${item.id}">Cetak</button>
-              <button class="ghost danger small" data-delete="${item.id}">Padam</button>
+              <button class="ghost small" data-edit="${safeId}">Edit</button>
+              <button class="ghost small" data-print="${safeId}">Cetak</button>
+              <button class="ghost danger small" data-delete="${safeId}">Padam</button>
             </div>
           </td>
         `;
@@ -963,11 +995,11 @@
         wrap.className = 'upload-item';
         wrap.innerHTML = `
           <div class="upload-meta">
-            <div class="cell-strong">${item.name || 'Tanpa nama'}</div>
+            <div class="cell-strong">${escapeHtml(item.name || 'Tanpa nama')}</div>
             <div class="cell-sub">${Math.round((item.size || 0) / 1024)} KB | ${formatDateTime(item.createdAt)}</div>
           </div>
           <div class="upload-actions">
-            <a class="ghost small" href="${item.url}" target="_blank" rel="noopener noreferrer">Lihat</a>
+            <a class="ghost small" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Lihat</a>
           </div>
         `;
         uploadsList.appendChild(wrap);
@@ -988,8 +1020,12 @@
       });
     };
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (!currentUser) {
+        alert('Sila log masuk semula.');
+        return;
+      }
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
       const programCode = data.programCode || '';
@@ -1018,16 +1054,28 @@
         uid: currentUser?.uid || ''
       };
 
-      if (editingId) {
-        db.ref(`sessions/${currentUser.uid}/${editingId}`).update(basePayload);
-      } else {
-        db.ref(`sessions/${currentUser.uid}`).push({
-          ...basePayload,
-          createdAt: firebase.database.ServerValue.TIMESTAMP
-        });
+      const submitLabel = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = 'Menyimpan...';
+      try {
+        if (editingId) {
+          await db.ref(`sessions/${currentUser.uid}/${editingId}`).update(basePayload);
+        } else {
+          await db.ref(`sessions/${currentUser.uid}`).push({
+            ...basePayload,
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+          });
+        }
+        submitButton.textContent = submitLabel;
+        cancelEdit();
+      } catch (error) {
+        // Kekalkan isi borang supaya data tidak hilang
+        console.error('Ralat menyimpan rekod:', error);
+        alert('Gagal menyimpan rekod. Semak sambungan internet dan cuba lagi.');
+        submitButton.textContent = submitLabel;
+      } finally {
+        submitButton.disabled = false;
       }
-
-      cancelEdit();
     });
 
     recordedBySelect.addEventListener('change', toggleRecordedByOther);
@@ -1049,7 +1097,10 @@
       const confirmSecond = confirm('Yakin padam semua rekod?');
       if (!confirmSecond) return;
       if (!currentUser) return;
-      db.ref(`sessions/${currentUser.uid}`).remove();
+      db.ref(`sessions/${currentUser.uid}`).remove().catch((error) => {
+        console.error('Ralat memadam semua rekod:', error);
+        alert('Gagal memadam rekod. Sila cuba lagi.');
+      });
       cancelEdit();
     });
 
@@ -1072,25 +1123,33 @@
     ];
 
     const formatCsvRows = (items) => {
-      const escape = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+      const escape = (val) => {
+        let text = String(val ?? '');
+        // Elak formula Excel daripada input pengguna (CSV injection)
+        if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+        return `"${text.replace(/"/g, '""')}"`;
+      };
+      // Simpan nombor panjang (No KP / telefon) sebagai teks supaya Excel tidak tukar ke 1.02E+11
+      const asText = (val) => (val ? `="${String(val).replace(/"/g, '')}"` : '');
       const rows = items.map((item) => [
         formatDateTime(item.sessionDate),
         item.referenceNumber || '',
         item.studentName,
-        item.studentId || '',
-        item.phone || '',
+        { raw: asText(item.studentId) },
+        { raw: asText(item.phone) },
         item.className,
         item.sessionType,
         item.serviceFocus || '',
         item.status,
         item.sessionNotes,
         item.actions,
-        item.followUp ? formatDateTime(item.followUp) : '',
+        item.followUp ? formatDate(item.followUp) : '',
         item.recordedBy || '',
         item.location || '',
         formatDateTime(item.createdAt)
       ]);
-      return [csvHeader, ...rows].map((row) => row.map(escape).join(',')).join('\n');
+      const cell = (val) => (val && typeof val === 'object' && 'raw' in val ? `"${val.raw.replace(/"/g, '""')}"` : escape(val));
+      return [csvHeader, ...rows].map((row) => row.map(cell).join(',')).join('\r\n');
     };
 
     const downloadCsv = (items, filenamePrefix, emptyMessage = 'Tiada rekod dalam tempoh ini.') => {
@@ -1099,7 +1158,7 @@
         return;
       }
       const csv = formatCsvRows(items);
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -1194,13 +1253,23 @@
         'Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun',
         'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'
       ];
-      statsMonth.innerHTML = months
-        .map((name, idx) => `<option value="${idx}" ${idx === now.getMonth() ? 'selected' : ''}>${name}</option>`)
-        .join('');
-      const allowedYears = [2026, 2027, 2028, 2029, 2030];
-      const defaultYear = allowedYears.includes(now.getFullYear()) ? now.getFullYear() : allowedYears[0];
-      statsYear.innerHTML = allowedYears
-        .map((y) => `<option value="${y}" ${y === defaultYear ? 'selected' : ''}>${y}</option>`)
+      if (!statsMonth.options.length) {
+        statsMonth.innerHTML = months
+          .map((name, idx) => `<option value="${idx}" ${idx === now.getMonth() ? 'selected' : ''}>${name}</option>`)
+          .join('');
+      }
+      // Senarai tahun dijana daripada rekod sedia ada + tahun semasa
+      const currentYear = now.getFullYear();
+      const entryYears = entries
+        .map((item) => new Date(item.sessionDate).getFullYear())
+        .filter((y) => Number.isFinite(y));
+      const minYear = Math.min(currentYear, ...entryYears);
+      const maxYear = Math.max(currentYear, ...entryYears);
+      const selectedYear = Number(statsYear.value) || currentYear;
+      const years = [];
+      for (let y = maxYear; y >= minYear; y -= 1) years.push(y);
+      statsYear.innerHTML = years
+        .map((y) => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`)
         .join('');
     };
 

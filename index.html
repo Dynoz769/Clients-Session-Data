@@ -34,9 +34,11 @@
             <input id="loginPassword" name="loginPassword" type="password" placeholder="Masukkan kata laluan" required />
           </div>
           <div class="actions auth-actions">
+            <button type="button" class="ghost" id="resetPassword">Lupa kata laluan?</button>
             <button type="submit" class="primary">Log masuk</button>
           </div>
           <div id="loginError" class="error hidden">Emel atau kata laluan tidak tepat.</div>
+          <div id="loginInfo" class="hint hidden"></div>
         </form>
       </div>
     </div>
@@ -61,6 +63,8 @@
 
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
+    const loginInfo = document.getElementById('loginInfo');
+    const resetPasswordButton = document.getElementById('resetPassword');
 
     const goToDashboard = () => {
       window.location.href = 'dashboard.html';
@@ -85,6 +89,24 @@
           loginError.textContent = 'Emel atau kata laluan tidak tepat.';
           loginError.classList.remove('hidden');
         }
+      });
+
+      resetPasswordButton.addEventListener('click', async () => {
+        const email = loginForm.loginEmail.value.trim();
+        loginError.classList.add('hidden');
+        if (!email) {
+          loginError.textContent = 'Masukkan emel dahulu untuk reset kata laluan.';
+          loginError.classList.remove('hidden');
+          return;
+        }
+        try {
+          await auth.sendPasswordResetEmail(email);
+        } catch (error) {
+          console.error('Ralat reset kata laluan:', error);
+        }
+        // Mesej sama walaupun gagal supaya tidak dedahkan sama ada emel wujud
+        loginInfo.textContent = 'Jika emel ini berdaftar, pautan reset kata laluan telah dihantar.';
+        loginInfo.classList.remove('hidden');
       });
     });
   </script>
