@@ -27,8 +27,9 @@
   --topbar-h: 64px;
 }
 
+/* Mod gelap: ikut sistem jika tiada pilihan, atau paksa melalui data-theme */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     color-scheme: dark;
     --bg: #0e0f11;
     --surface: #16171a;
@@ -49,6 +50,63 @@
     --green: #5fc995;
     --shadow: none;
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e0f11;
+  --surface: #16171a;
+  --surface-2: #1d1e22;
+  --border: #26282d;
+  --border-strong: #34363c;
+  --text: #ececec;
+  --muted: #9b9ea6;
+  --faint: #6c6f76;
+  --primary: #ececec;
+  --on-primary: #111214;
+  --accent: #8b85ff;
+  --focus: rgba(139, 133, 255, 0.25);
+  --danger: #f07087;
+  --amber: #e3b05c;
+  --rose: #f07087;
+  --orange: #f0955a;
+  --green: #5fc995;
+  --shadow: none;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Peralihan warna lembut semasa tukar tema */
+html.theme-anim,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease !important;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  display: none;
+}
+
+.theme-toggle svg {
+  animation: fade-in 0.3s ease both;
+}
+
+.corner-actions {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
 }
 
 *,
