@@ -1429,8 +1429,9 @@
         logBody.appendChild(row);
       });
 
+      // Kira semula selepas data dimuatkan, supaya tidak tersekat pada nombor sebelum data tiba
       if (!editingId) {
-        prefillReferenceNumber();
+        prefillReferenceNumber(true);
       }
 
       emptyState.style.display = filtered.length ? 'none' : 'flex';
