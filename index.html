@@ -3,47 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Log Masuk | CSD - Clients Session Data</title>
+  <title>Log Masuk | SESIQ</title>
+  <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" href="logo.jpeg" />
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <div class="floating-banner">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-2">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-3">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-4">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-5">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-6">CSD - CLIENTS SESSION DATA</div>
-  <div class="auth-shell">
-    <div class="login-grid">
-      <div class="auth-card">
-        <div class="logo-holder">
-          <img src="logo.jpeg" alt="Logo CSD" class="logo-img" />
-        </div>
-        <p class="eyebrow">Akses Staf CSD</p>
-        <h2>Log masuk ke rekod sesi</h2>
-        <p class="lede">Gunakan akaun yang diberikan untuk melihat dan menambah rekod pelajar.</p>
-        <form id="loginForm" class="auth-form">
-          <div class="field">
-            <label for="loginEmail">Emel</label>
-            <input id="loginEmail" name="loginEmail" type="email" placeholder="contoh: guru1@upk.edu" required />
-          </div>
-          <div class="field">
-            <label for="loginPassword">Kata laluan</label>
-            <input id="loginPassword" name="loginPassword" type="password" placeholder="Masukkan kata laluan" required />
-          </div>
-          <div class="actions auth-actions">
-            <button type="submit" class="primary">Log masuk</button>
-          </div>
-          <div id="loginError" class="error hidden">Emel atau kata laluan tidak tepat.</div>
-        </form>
+  <main class="auth-shell">
+    <div class="auth-card reveal" id="authCard">
+      <div class="auth-head">
+        <img src="logo.jpeg" alt="Logo" class="logo-img" />
+        <span class="wordmark">SESIQ</span>
+        <h1>Log masuk</h1>
+        <p class="lede">Sistem Rekod Sesi Klien</p>
       </div>
+      <form id="loginForm" class="auth-form">
+        <div class="field">
+          <label for="loginEmail">Emel</label>
+          <input id="loginEmail" name="loginEmail" type="email" placeholder="nama@upk.edu" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <div class="label-row">
+            <label for="loginPassword">Kata laluan</label>
+            <button type="button" class="link-btn" id="resetPassword">Lupa?</button>
+          </div>
+          <input id="loginPassword" name="loginPassword" type="password" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="primary" id="loginButton">Log masuk</button>
+        <div id="loginError" class="error hidden">Emel atau kata laluan tidak tepat.</div>
+        <div id="loginInfo" class="hint hidden"></div>
+      </form>
+      <p class="auth-foot">made by Dynozz.</p>
     </div>
-    <p class="credit credit-footer">CSD - CLIENTS SESSION DATA.</p>
-    <div class="made-by">made by Dynozz.</div>
-  </div>
+  </main>
 
+  <script src="ui.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDURmoIpmfcrxG8I6Uf7aBCBsiS-T0Hv8k",
@@ -61,9 +58,14 @@
 
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
+    const loginInfo = document.getElementById('loginInfo');
+    const resetPasswordButton = document.getElementById('resetPassword');
+
+    const loginButton = document.getElementById('loginButton');
+    const authCard = document.getElementById('authCard');
 
     const goToDashboard = () => {
-      window.location.href = 'dashboard.html';
+      SesiqUI.leaveTo('dashboard.html');
     };
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -77,14 +79,39 @@
         event.preventDefault();
         const email = loginForm.loginEmail.value.trim();
         const password = loginForm.loginPassword.value;
+        loginButton.disabled = true;
+        loginButton.classList.add('loading');
+        loginError.classList.add('hidden');
         try {
           await auth.signInWithEmailAndPassword(email, password);
-          loginError.classList.add('hidden');
           goToDashboard();
         } catch (error) {
           loginError.textContent = 'Emel atau kata laluan tidak tepat.';
           loginError.classList.remove('hidden');
+          authCard.classList.remove('reveal', 'shake');
+          void authCard.offsetWidth;
+          authCard.classList.add('shake');
+          loginButton.disabled = false;
+          loginButton.classList.remove('loading');
         }
+      });
+
+      resetPasswordButton.addEventListener('click', async () => {
+        const email = loginForm.loginEmail.value.trim();
+        loginError.classList.add('hidden');
+        if (!email) {
+          loginError.textContent = 'Masukkan emel dahulu untuk reset kata laluan.';
+          loginError.classList.remove('hidden');
+          return;
+        }
+        try {
+          await auth.sendPasswordResetEmail(email);
+        } catch (error) {
+          console.error('Ralat reset kata laluan:', error);
+        }
+        // Mesej sama walaupun gagal supaya tidak dedahkan sama ada emel wujud
+        loginInfo.textContent = 'Jika emel ini berdaftar, pautan reset kata laluan telah dihantar.';
+        loginInfo.classList.remove('hidden');
       });
     });
   </script>

@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | CSD - Clients Session Data</title>
+  <title>Dashboard | SESIQ</title>
+  <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" href="logo.jpeg" />
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -11,288 +14,285 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 </head>
 <body>
-  <div class="floating-banner">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-2">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-3">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-4">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-5">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-6">CSD - CLIENTS SESSION DATA</div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <span class="brand">
+        <img src="logo.jpeg" alt="Logo" class="brand-logo" />
+        <span class="wordmark">SESIQ</span>
+      </span>
+      <nav class="side-tabs" aria-label="Navigasi">
+        <button class="tab-button active" data-target="formSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><span>Borang</span></button>
+        <button class="tab-button" data-target="listSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>Rekod</span></button>
+        <button class="tab-button" data-target="statsSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg><span>Analisa</span></button>
+        <!-- <button class="tab-button" data-target="uploadSection">Upload Gambar</button> -->
+      </nav>
+      <div class="user-menu">
+        <span class="user-name" id="userBadge">-</span>
+        <button class="icon-btn" type="button" id="logoutButton" title="Log keluar" aria-label="Log keluar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></button>
+      </div>
+    </div>
+  </header>
+
   <div class="shell" id="appShell">
-    <section class="montage-banner" aria-label="Montaj gambar CSD">
-      <div class="montage-strip">
-        <div class="montage-track">
-          <div class="montage-frame"><img src="gambar1.jpeg" alt="Moment 1" /></div>
-          <div class="montage-frame"><img src="gambar2.jpeg" alt="Moment 2" /></div>
-          <div class="montage-frame"><img src="gambar3.jpeg" alt="Moment 3" /></div>
-          <div class="montage-frame"><img src="gambar4.jpeg" alt="Moment 4" /></div>
-          <div class="montage-frame"><img src="gambar5.jpeg" alt="Moment 5" /></div>
-          <div class="montage-frame"><img src="gambar6.jpeg" alt="Moment 6" /></div>
-          <div class="montage-frame"><img src="gambar7.jpeg" alt="Moment 7" /></div>
-          <div class="montage-frame"><img src="gambar8.jpeg" alt="Moment 8" /></div>
-          <div class="montage-frame"><img src="gambar9.jpeg" alt="Moment 9" /></div>
-          <div class="montage-frame"><img src="gambar10.jpeg" alt="Moment 10" /></div>
+    <section class="montage-banner reveal" aria-hidden="true">
+      <div class="montage-track">
+          <div class="montage-frame"><img src="gambar1.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar2.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar3.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar4.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar5.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar6.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar7.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar8.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar9.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar10.jpeg" decoding="async" alt="" /></div>
           <!-- duplicate for seamless loop -->
-          <div class="montage-frame"><img src="gambar1.jpeg" alt="Moment 1" /></div>
-          <div class="montage-frame"><img src="gambar2.jpeg" alt="Moment 2" /></div>
-          <div class="montage-frame"><img src="gambar3.jpeg" alt="Moment 3" /></div>
-          <div class="montage-frame"><img src="gambar4.jpeg" alt="Moment 4" /></div>
-          <div class="montage-frame"><img src="gambar5.jpeg" alt="Moment 5" /></div>
-          <div class="montage-frame"><img src="gambar6.jpeg" alt="Moment 6" /></div>
-          <div class="montage-frame"><img src="gambar7.jpeg" alt="Moment 7" /></div>
-          <div class="montage-frame"><img src="gambar8.jpeg" alt="Moment 8" /></div>
-          <div class="montage-frame"><img src="gambar9.jpeg" alt="Moment 9" /></div>
-          <div class="montage-frame"><img src="gambar10.jpeg" alt="Moment 10" /></div>
-        </div>
+          <div class="montage-frame"><img src="gambar1.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar2.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar3.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar4.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar5.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar6.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar7.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar8.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar9.jpeg" decoding="async" alt="" /></div>
+          <div class="montage-frame"><img src="gambar10.jpeg" decoding="async" alt="" /></div>
       </div>
     </section>
-    <header class="hero">
-      <div>
-        <p class="eyebrow">CSD - Clients Session Data</p>
-        <h1>CSD - Clients Session Data</h1>
-        <p class="lede">
-          Rekod ringkas, pantas, dan tersusun. Semak status, kemaskini, atau padam rekod bila perlu.
-        </p>
-      </div>
-      <div class="hero-meta">
-        <div class="badge" id="currentDate">Hari ini</div>
-        <div class="badge subtle" id="userBadge">Guru: -</div>
-        <button class="ghost" type="button" id="logoutButton">Log keluar</button>
-      </div>
-    </header>
 
-    <section class="stat-grid">
+    <div class="page-head reveal" style="--d: 1">
+      <div>
+        <p class="eyebrow" id="currentDate">Hari ini</p>
+        <h1>Rekod sesi</h1>
+      </div>
+    </div>
+
+    <section class="stat-grid reveal" style="--d: 2">
       <div class="stat-card">
         <p class="stat-label">Jumlah rekod</p>
         <div class="stat-value" id="totalCount">0</div>
-        <p class="stat-foot">Semua sesi yang disimpan</p>
+        <p class="stat-foot">Semua sesi</p>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-tone="amber">
         <p class="stat-label">Dalam proses</p>
         <div class="stat-value" id="inProgressCount">0</div>
         <p class="stat-foot">Masih dipantau</p>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-tone="rose">
         <p class="stat-label">Perlu susulan</p>
         <div class="stat-value" id="followUpCount">0</div>
-        <p class="stat-foot">Set tarikh susulan</p>
+        <p class="stat-foot">Ada tarikh susulan</p>
       </div>
-      <div class="stat-card">
-        <p class="stat-label">Perlu di panggil</p>
+      <div class="stat-card" data-tone="orange">
+        <p class="stat-label">Perlu dipanggil</p>
         <div class="stat-value" id="callCount">0</div>
-        <p class="stat-foot">Menunggu panggilan/temu janji</p>
+        <p class="stat-foot">Menunggu temu janji</p>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-tone="green">
         <p class="stat-label">Selesai</p>
         <div class="stat-value" id="doneCount">0</div>
         <p class="stat-foot">Sesi ditutup</p>
       </div>
     </section>
 
-    <main class="layout">
-      <aside class="side-tabs">
-        <p class="eyebrow">Navigasi</p>
-        <button class="tab-button active" data-target="formSection">Borang Sesi</button>
-        <button class="tab-button" data-target="listSection">Senarai Sesi</button>
-        <button class="tab-button" data-target="statsSection">Analisa</button>
-        <!-- <button class="tab-button" data-target="uploadSection">Upload Gambar</button> -->
-      </aside>
+    <main class="content-panels reveal" style="--d: 3">
+      <section class="panel form-panel" id="formSection">
+        <div class="panel-header">
+          <div>
+            <h2>Sesi baru</h2>
+            <p class="hint">Isikan butiran sesi, kemudian simpan.</p>
+          </div>
+        </div>
 
-      <div class="content-panels">
-        <section class="panel form-panel" id="formSection">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Borang Sesi</p>
-              <h2>Maklumat pelajar</h2>
-              <p class="hint">Isikan butiran sesi sebelum simpan.</p>
-            </div>
+        <form id="sessionForm" class="form-grid">
+          <div class="form-section">Murid</div>
+
+          <div class="field span-2">
+            <label for="studentName">Nama murid</label>
+            <input id="studentName" name="studentName" type="text" placeholder="Contoh: Aisyah binti Ahmad" required />
           </div>
 
-          <form id="sessionForm" class="form-grid">
-            <div class="field">
-              <label for="studentName">Nama murid</label>
-              <input id="studentName" name="studentName" type="text" placeholder="Contoh: Aisyah binti Ahmad" required />
-            </div>
-
-            <div class="field">
-              <label for="studentId">No Kad Pengenalan</label>
-              <input id="studentId" name="studentId" type="text" placeholder="Contoh: 010203040567" />
-            </div>
-
-            <div class="field">
-              <label for="phone">No telefon</label>
-              <input id="phone" name="phone" type="tel" placeholder="Contoh: 012-3456789" />
-            </div>
-
-            <div class="field">
-              <label for="referenceNumber">Nombor rujukan</label>
-              <input id="referenceNumber" name="referenceNumber" type="text" placeholder="Auto: UPK2026/01" readonly />
-            </div>
-
-            <div class="field">
-              <label for="programCode">Program</label>
-              <select id="programCode" name="programCode" required>
-                <option value="">Pilih program</option>
-                <option value="BKP1">BKP1</option>
-                <option value="BKP2">BKP2</option>
-                <option value="KSK1">KSK1</option>
-                <option value="KSK2">KSK2</option>
-                <option value="BPR1">BPR1</option>
-                <option value="BPR2">BPR2</option>
-                <option value="BPM1">BPM1</option>
-                <option value="BPM2">BPM2</option>
-                <option value="BPP1">BPP1</option>
-                <option value="BPP2">BPP2</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="programLevel">Tahap</label>
-              <select id="programLevel" name="programLevel" required>
-                <option value="">Pilih tahap</option>
-                <option value="SIJIL">SIJIL</option>
-                <option value="DIPLOMA">DIPLOMA</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="programSemester">Semester</label>
-              <select id="programSemester" name="programSemester" required>
-                <option value="">Pilih semester</option>
-                <option value="1">Sem 1</option>
-                <option value="2">Sem 2</option>
-                <option value="3">Sem 3</option>
-                <option value="4">Sem 4</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="sessionDate">Tarikh & masa</label>
-              <input id="sessionDate" name="sessionDate" type="datetime-local" required />
-            </div>
-
-            <div class="field">
-              <label for="recordedBy">Kaunselor</label>
-              <select id="recordedBy" name="recordedBy" required>
-                <option value="">Pilih kaunselor</option>
-                <option value="NOR AZERINA BINTI NOORDIN">NOR AZERINA BINTI NOORDIN</option>
-                <option value="WAN NORSITTA BINTI WAN AB RAHMAN">WAN NORSITTA BINTI WAN AB RAHMAN</option>
-                <option value="TENGKU ANISA AIYSHA BINTI TENGKU AZMI">TENGKU ANISA AIYSHA BINTI TENGKU AZMI</option>
-                <option value="Lain-lain">Lain-lain</option>
-              </select>
-            </div>
-
-            <div class="field" id="recordedByOtherWrap" hidden>
-              <label for="recordedByOther">Rujukan Guru (Jika ada)</label>
-              <input id="recordedByOther" name="recordedByOther" type="text" placeholder="Nama kaunselor lain" />
-            </div>
-
-            <div class="field">
-              <label for="sessionType">Jenis sesi</label>
-              <select id="sessionType" name="sessionType" required>
-                <option value="">Pilih satu</option>
-                <option>Kaunseling Individu</option>
-                <option>Bimbingan Individu</option>
-                <option>Kaunseling Kelompok</option>
-                <option>Bimbingan Kelompok</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="serviceFocus">Fokus perkhidmatan</label>
-              <select id="serviceFocus" name="serviceFocus" required>
-                <option value="">Pilih fokus</option>
-                <option>Pembangunan Dan Perkembangan Sahsiah Diri Murid</option>
-                <option>Pendidikan Kerjaya Murid</option>
-                <option>Peningkatan Disiplin Diri Murid</option>
-                <option>Psikososial dan Kesejahteraan Mental Murid</option>
-              </select>
-            </div>
-
-            <div class="field span-2">
-              <label for="sessionNotes">Ringkasan perbincangan / isu</label>
-              <textarea id="sessionNotes" name="sessionNotes" rows="3" placeholder="Catat apa yang dibincang, isu atau cabaran yang dihadapi" required></textarea>
-            </div>
-
-            <div class="field span-2">
-              <label for="actions">Tindakan/Intervensi</label>
-              <textarea id="actions" name="actions" rows="3" placeholder="Contoh: Tugasan tambahan, panggilan ibu bapa, sesi susulan" required></textarea>
-            </div>
-
-            <div class="field">
-              <label for="status">Status</label>
-              <select id="status" name="status" required>
-                <option value="">Pilih status</option>
-                <option>Dalam proses</option>
-                <option>Selesai</option>
-                <option>Perlu susulan</option>
-                <option>Perlu di panggil</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="followUp">Tarikh susulan (jika ada)</label>
-              <input id="followUp" name="followUp" type="date" />
-            </div>
-
-            <div class="field">
-            <label for="location">Lokasi sesi</label>
-            <input id="location" name="location" type="text" placeholder="Pejabat CSD / Bilik kaunseling" />
+          <div class="field">
+            <label for="studentId">No Kad Pengenalan</label>
+            <input id="studentId" name="studentId" type="text" inputmode="numeric" placeholder="010203040567" />
           </div>
 
-            <div class="actions span-2">
-              <button type="button" class="ghost subtle" id="cancelEdit" hidden>Batal edit</button>
-              <button type="reset" class="ghost">Kosongkan</button>
-              <button type="submit" class="primary" id="submitButton">Simpan sesi</button>
-            </div>
-          </form>
-        </section>
-
-        <section class="panel log-panel hidden" id="listSection">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Senarai Sesi</p>
-              <h2>Rekod terkini</h2>
-              <p class="hint">Cari mengikut nama murid, program, atau status. Edit atau padam rekod jika perlu.</p>
-            </div>
-            <div class="filters">
-              <input id="searchInput" type="search" placeholder="Cari nama / program / isu" />
-              <select id="statusFilter">
-                <option value="all">Semua status</option>
-                <option value="Dalam proses">Dalam proses</option>
-                <option value="Selesai">Selesai</option>
-                <option value="Perlu susulan">Perlu susulan</option>
-                <option value="Perlu di panggil">Perlu di panggil</option>
-              </select>
-              <button type="button" class="ghost" id="exportCsv">Export CSV</button>
-              <button type="button" class="ghost danger" id="clearLog">Padam semua</button>
-            </div>
+          <div class="field">
+            <label for="phone">No telefon</label>
+            <input id="phone" name="phone" type="tel" placeholder="012-3456789" />
           </div>
 
-          <div class="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>Tarikh</th>
-                  <th>Nama / Program</th>
-                  <th>Jenis / fokus / status</th>
-                  <th>Ringkasan & tindakan</th>
-                  <th>Susulan</th>
-                  <th>Tindakan</th>
-                </tr>
-              </thead>
-              <tbody id="logBody"></tbody>
-            </table>
-            <div id="emptyState" class="empty">Belum ada rekod. Isi borang untuk menambah.</div>
+          <div class="field">
+            <label for="programCode">Program</label>
+            <select id="programCode" name="programCode" required>
+              <option value="">Pilih program</option>
+              <option value="BKP1">BKP1</option>
+              <option value="BKP2">BKP2</option>
+              <option value="KSK1">KSK1</option>
+              <option value="KSK2">KSK2</option>
+              <option value="BPR1">BPR1</option>
+              <option value="BPR2">BPR2</option>
+              <option value="BPM1">BPM1</option>
+              <option value="BPM2">BPM2</option>
+              <option value="BPP1">BPP1</option>
+              <option value="BPP2">BPP2</option>
+            </select>
           </div>
-        </section>
 
-        <section class="panel hidden" id="statsSection">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Analisa</p>
-              <h2>Analisa Mingguan/Bulanan/Tahunan</h2>
-              <p class="hint">Kiraan berdasarkan tarikh sesi yang dimasukkan.</p>
-            </div>
+          <div class="field">
+            <label for="programLevel">Tahap</label>
+            <select id="programLevel" name="programLevel" required>
+              <option value="">Pilih tahap</option>
+              <option value="SIJIL">SIJIL</option>
+              <option value="DIPLOMA">DIPLOMA</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="programSemester">Semester</label>
+            <select id="programSemester" name="programSemester" required>
+              <option value="">Pilih semester</option>
+              <option value="1">Sem 1</option>
+              <option value="2">Sem 2</option>
+              <option value="3">Sem 3</option>
+              <option value="4">Sem 4</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="referenceNumber">Nombor rujukan</label>
+            <input id="referenceNumber" name="referenceNumber" type="text" placeholder="Auto: UPK2026/01" readonly />
+          </div>
+
+          <div class="form-section">Sesi</div>
+
+          <div class="field">
+            <label for="sessionDate">Tarikh &amp; masa</label>
+            <input id="sessionDate" name="sessionDate" type="datetime-local" required />
+          </div>
+
+          <div class="field">
+            <label for="location">Lokasi</label>
+            <input id="location" name="location" type="text" placeholder="Bilik kaunseling" />
+          </div>
+
+          <div class="field">
+            <label for="sessionType">Jenis sesi</label>
+            <select id="sessionType" name="sessionType" required>
+              <option value="">Pilih jenis</option>
+              <option>Kaunseling Individu</option>
+              <option>Bimbingan Individu</option>
+              <option>Kaunseling Kelompok</option>
+              <option>Bimbingan Kelompok</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="serviceFocus">Fokus perkhidmatan</label>
+            <select id="serviceFocus" name="serviceFocus" required>
+              <option value="">Pilih fokus</option>
+              <option>Pembangunan Dan Perkembangan Sahsiah Diri Murid</option>
+              <option>Pendidikan Kerjaya Murid</option>
+              <option>Peningkatan Disiplin Diri Murid</option>
+              <option>Psikososial dan Kesejahteraan Mental Murid</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="recordedBy">Kaunselor</label>
+            <select id="recordedBy" name="recordedBy" required>
+              <option value="">Pilih kaunselor</option>
+              <option value="NOR AZERINA BINTI NOORDIN">NOR AZERINA BINTI NOORDIN</option>
+              <option value="WAN NORSITTA BINTI WAN AB RAHMAN">WAN NORSITTA BINTI WAN AB RAHMAN</option>
+              <option value="TENGKU ANISA AIYSHA BINTI TENGKU AZMI">TENGKU ANISA AIYSHA BINTI TENGKU AZMI</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </div>
+
+          <div class="field" id="recordedByOtherWrap" hidden>
+            <label for="recordedByOther">Nama kaunselor lain</label>
+            <input id="recordedByOther" name="recordedByOther" type="text" placeholder="Nama penuh" />
+          </div>
+
+          <div class="form-section">Catatan</div>
+
+          <div class="field span-2">
+            <label for="sessionNotes">Ringkasan perbincangan / isu</label>
+            <textarea id="sessionNotes" name="sessionNotes" rows="3" placeholder="Apa yang dibincang, isu atau cabaran" required></textarea>
+          </div>
+
+          <div class="field span-2">
+            <label for="actions">Tindakan / intervensi</label>
+            <textarea id="actions" name="actions" rows="3" placeholder="Contoh: panggilan ibu bapa, sesi susulan" required></textarea>
+          </div>
+
+          <div class="field">
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+              <option value="">Pilih status</option>
+              <option>Dalam proses</option>
+              <option>Selesai</option>
+              <option>Perlu susulan</option>
+              <option>Perlu di panggil</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="followUp">Tarikh susulan (jika ada)</label>
+            <input id="followUp" name="followUp" type="date" />
+          </div>
+
+          <div class="actions span-2">
+            <button type="button" class="ghost subtle" id="cancelEdit" hidden>Batal edit</button>
+            <button type="reset" class="ghost">Kosongkan</button>
+            <button type="submit" class="primary" id="submitButton">Simpan sesi</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel log-panel hidden" id="listSection">
+        <div class="panel-header">
+          <div>
+            <h2>Rekod</h2>
+            <p class="hint">Cari, edit, cetak atau padam rekod.</p>
+          </div>
+          <div class="filters">
+            <input id="searchInput" type="search" placeholder="Cari nama, program, isu" aria-label="Cari rekod" />
+            <select id="statusFilter" aria-label="Tapis status">
+              <option value="all">Semua status</option>
+              <option value="Dalam proses">Dalam proses</option>
+              <option value="Selesai">Selesai</option>
+              <option value="Perlu susulan">Perlu susulan</option>
+              <option value="Perlu di panggil">Perlu di panggil</option>
+            </select>
+            <button type="button" class="ghost" id="exportCsv">Export CSV</button>
+            <button type="button" class="ghost subtle danger" id="clearLog">Padam semua</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Tarikh</th>
+                <th>Murid</th>
+                <th>Sesi</th>
+                <th>Ringkasan</th>
+                <th>Susulan</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="logBody"></tbody>
+          </table>
+          <div id="emptyState" class="empty">Belum ada rekod. Isi borang untuk menambah.</div>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="statsSection">
+        <div class="panel-header">
+          <div>
+            <h2>Analisa</h2>
+            <p class="hint">Berdasarkan tarikh sesi.</p>
           </div>
           <div class="filters stats-filters">
             <div class="field">
@@ -304,92 +304,92 @@
               <select id="statsYear"></select>
             </div>
           </div>
-          <div class="stat-grid">
-            <div class="stat-card">
-              <p class="stat-label">Minggu ini</p>
-              <div class="stat-value" id="weeklyTotal">0</div>
-              <p class="stat-foot" id="weeklyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
-            </div>
-            <div class="stat-card">
-              <p class="stat-label">Bulan ini</p>
-              <div class="stat-value" id="monthlyTotal">0</div>
-              <p class="stat-foot" id="monthlyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
-            </div>
+        </div>
+
+        <div class="stat-grid three">
           <div class="stat-card">
-            <p class="stat-label">Tahun ini</p>
+            <p class="stat-label">Minggu ini</p>
+            <div class="stat-value" id="weeklyTotal">0</div>
+            <p class="stat-foot" id="weeklyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Bulan dipilih</p>
+            <div class="stat-value" id="monthlyTotal">0</div>
+            <p class="stat-foot" id="monthlyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Tahun dipilih</p>
             <div class="stat-value" id="yearlyTotal">0</div>
             <p class="stat-foot" id="yearlyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
           </div>
         </div>
-          <div class="chart-card">
-            <div class="chart-header">
-              <div>
-                <p class="eyebrow">Muat turun</p>
-                <h3>CSV mengikut tempoh</h3>
-                <p class="hint">Guna pilihan bulan/tahun untuk muat turun bulanan & tahunan.</p>
-              </div>
-              <div class="chart-toggles">
-                <button type="button" class="ghost small download-toggle" data-download-period="week">Minggu ini</button>
-                <button type="button" class="ghost small download-toggle" data-download-period="month">Bulan dipilih</button>
-                <button type="button" class="ghost small download-toggle" data-download-period="year">Tahun dipilih</button>
-              </div>
-            </div>
-          </div>
-          <div class="chart-card">
-            <div class="chart-header">
-              <div>
-                <p class="eyebrow">Graf status</p>
-                <h3>Status mengikut tempoh</h3>
-              </div>
-              <div class="chart-toggles">
-                <button type="button" class="ghost small chart-toggle active" data-period="week">Minggu</button>
-                <button type="button" class="ghost small chart-toggle" data-period="month">Bulan</button>
-                <button type="button" class="ghost small chart-toggle" data-period="year">Tahun</button>
-              </div>
-            </div>
-            <div class="chart-bars" id="chartBars">
-              <div class="chart-bar" data-key="inProgress">
-                <span class="chart-bar-fill"></span>
-                <span class="chart-label">Dalam proses</span>
-                <span class="chart-value">0</span>
-              </div>
-              <div class="chart-bar" data-key="followUp">
-                <span class="chart-bar-fill"></span>
-                <span class="chart-label">Perlu susulan</span>
-                <span class="chart-value">0</span>
-              </div>
-              <div class="chart-bar" data-key="call">
-                <span class="chart-bar-fill"></span>
-                <span class="chart-label">Perlu di panggil</span>
-                <span class="chart-value">0</span>
-              </div>
-              <div class="chart-bar" data-key="done">
-                <span class="chart-bar-fill"></span>
-                <span class="chart-label">Selesai</span>
-                <span class="chart-value">0</span>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        <!--
-        <section class="panel hidden" id="uploadSection">
-          <div class="panel-header">
+        <div class="chart-card">
+          <div class="chart-header">
             <div>
-              <p class="eyebrow">Upload</p>
-              <h2>Simpan gambar sesi</h2>
-              <p class="hint">Muat naik imej berkaitan sesi (disimpan ke Firebase Storage).</p>
+              <h3>Status mengikut tempoh</h3>
+            </div>
+            <div class="chart-toggles" role="group" aria-label="Tempoh graf">
+              <button type="button" class="ghost small chart-toggle active" data-period="week">Minggu</button>
+              <button type="button" class="ghost small chart-toggle" data-period="month">Bulan</button>
+              <button type="button" class="ghost small chart-toggle" data-period="year">Tahun</button>
             </div>
           </div>
-          <div class="upload-box">
-            <input type="file" id="uploadFile" accept="image/*" />
-            <button class="primary" type="button" id="uploadButton">Muat naik</button>
-            <div class="upload-status" id="uploadStatus">Pilih gambar untuk muat naik.</div>
+          <div class="chart-bars" id="chartBars">
+            <div class="chart-bar" data-key="inProgress">
+              <span class="chart-track"><span class="chart-bar-fill"></span></span>
+              <span class="chart-label">Dalam proses</span>
+              <span class="chart-value">0</span>
+            </div>
+            <div class="chart-bar" data-key="followUp">
+              <span class="chart-track"><span class="chart-bar-fill"></span></span>
+              <span class="chart-label">Perlu susulan</span>
+              <span class="chart-value">0</span>
+            </div>
+            <div class="chart-bar" data-key="call">
+              <span class="chart-track"><span class="chart-bar-fill"></span></span>
+              <span class="chart-label">Perlu dipanggil</span>
+              <span class="chart-value">0</span>
+            </div>
+            <div class="chart-bar" data-key="done">
+              <span class="chart-track"><span class="chart-bar-fill"></span></span>
+              <span class="chart-label">Selesai</span>
+              <span class="chart-value">0</span>
+            </div>
           </div>
-          <div class="uploads-list" id="uploadsList"></div>
-        </section>
-        -->
-      </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3>Muat turun CSV</h3>
+              <p class="hint">Ikut bulan/tahun yang dipilih di atas.</p>
+            </div>
+            <div class="chart-toggles">
+              <button type="button" class="ghost small download-toggle" data-download-period="week">Minggu ini</button>
+              <button type="button" class="ghost small download-toggle" data-download-period="month">Bulan</button>
+              <button type="button" class="ghost small download-toggle" data-download-period="year">Tahun</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--
+      <section class="panel hidden" id="uploadSection">
+        <div class="panel-header">
+          <div>
+            <h2>Simpan gambar sesi</h2>
+            <p class="hint">Muat naik imej berkaitan sesi (disimpan ke Firebase Storage).</p>
+          </div>
+        </div>
+        <div class="upload-box">
+          <input type="file" id="uploadFile" accept="image/*" />
+          <button class="primary" type="button" id="uploadButton">Muat naik</button>
+          <div class="upload-status" id="uploadStatus">Pilih gambar untuk muat naik.</div>
+        </div>
+        <div class="uploads-list" id="uploadsList"></div>
+      </section>
+      -->
     </main>
   </div>
 
@@ -397,13 +397,13 @@
     <div class="print-card">
       <header class="print-header">
         <div>
-          <p class="eyebrow print-eyebrow">CSD - CLIENTS SESSION DATA</p>
+          <p class="eyebrow print-eyebrow">SESIQ &middot; SISTEM REKOD SESI KLIEN</p>
           <h2>Borang Rekod Sesi</h2>
           <p class="print-hint">Cetak satu muka surat untuk simpanan fail guru.</p>
           <p class="print-meta">Dicetak pada <span id="printGeneratedAt">-</span></p>
         </div>
         <div class="print-logo-block">
-          <img src="logo.jpeg" alt="Logo CSD" class="print-logo" />
+          <img src="logo.jpeg" alt="Logo SESIQ" class="print-logo" />
           <div class="print-meta">Kaunselor: <span id="printRecordedBy">-</span></div>
         </div>
       </header>
@@ -478,6 +478,7 @@
     </div>
   </div>
 
+  <script src="ui.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDURmoIpmfcrxG8I6Uf7aBCBsiS-T0Hv8k",
@@ -594,6 +595,28 @@
       });
     };
 
+    const escapeHtml = (value) =>
+      String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[ch]);
+
+    // Tarikh tanpa masa (YYYY-MM-DD) dibaca sebagai waktu tempatan, bukan UTC
+    const formatDate = (value) => {
+      if (!value) return '-';
+      const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      const date = match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : new Date(value);
+      if (!Number.isFinite(date.getTime())) return '-';
+      return date.toLocaleDateString('ms-MY', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      });
+    };
+
     const parseReferenceNumber = (ref) => {
       if (!ref) return null;
       const match = String(ref).match(/UPK(\d{4})\/(\d{1,})/i);
@@ -653,6 +676,7 @@
           id
         }));
         entries.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        populateMonthYear();
         render();
       };
       sessionsQuery.on('value', sessionsListener, (error) => {
@@ -749,7 +773,11 @@
       const confirmDelete = confirm('Padam rekod ini?');
       if (!confirmDelete) return;
       if (!currentUser) return;
-      db.ref(`sessions/${currentUser.uid}/${id}`).remove();
+      db.ref(`sessions/${currentUser.uid}/${id}`).remove().catch((error) => {
+        console.error('Ralat memadam rekod:', error);
+        SesiqUI.showToast('Gagal memadam rekod. Sila cuba lagi.', 'error', 5000);
+      });
+      SesiqUI.showToast('Rekod dipadam.', 'info');
       if (editingId === id) cancelEdit();
     };
 
@@ -762,6 +790,9 @@
         const day = start.getDay(); // 0 Sun
         const diff = (day === 0 ? 6 : day - 1);
         start.setDate(start.getDate() - diff);
+        end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23, 59, 59, 999);
       } else if (period === 'month') {
         const selYear = Number(statsYear.value) || now.getFullYear();
         const selMonth = Number(statsMonth.value); // 0-11
@@ -797,11 +828,11 @@
       const month = getPeriodCounts('month');
       const year = getPeriodCounts('year');
       const foot = (s) => `${s.inProgress} dalam proses | ${s.followUp} susulan | ${s.call} perlu di panggil | ${s.done} selesai`;
-      weeklyTotal.textContent = week.total;
+      SesiqUI.animateCount(weeklyTotal, week.total);
       weeklyFoot.textContent = foot(week);
-      monthlyTotal.textContent = month.total;
+      SesiqUI.animateCount(monthlyTotal, month.total);
       monthlyFoot.textContent = foot(month);
-      yearlyTotal.textContent = year.total;
+      SesiqUI.animateCount(yearlyTotal, year.total);
       yearlyFoot.textContent = foot(year);
       updateChart(chartPeriod);
     };
@@ -815,10 +846,9 @@
         const value = statsMap[key] || 0;
         const fill = bar.querySelector('.chart-bar-fill');
         const valueEl = bar.querySelector('.chart-value');
-        const pct = (value / maxVal) * 100;
-        fill.style.height = `${Math.max(pct, 8)}%`;
-        fill.style.opacity = value === 0 ? 0.25 : 1;
-        valueEl.textContent = value;
+        const pct = value ? Math.max((value / maxVal) * 100, 3) : 0;
+        fill.style.width = `${pct}%`;
+        SesiqUI.animateCount(valueEl, value);
       });
       chartToggleButtons.forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.period === period);
@@ -842,11 +872,11 @@
       setPrintValue(printSessionType, entry.sessionType || '-');
       setPrintValue(printServiceFocus, entry.serviceFocus || '-');
       setPrintValue(printStatus, entry.status || '-');
-      setPrintValue(printFollowUp, entry.followUp ? formatDateTime(entry.followUp) : '-');
+      setPrintValue(printFollowUp, entry.followUp ? formatDate(entry.followUp) : '-');
       setPrintValue(printLocation, entry.location || '-');
       setPrintValue(printNotes, entry.sessionNotes || '-');
       setPrintValue(printActions, entry.actions || '-');
-      setPrintValue(printRecordedBy, entry.recordedBy || 'Staf CSD');
+      setPrintValue(printRecordedBy, entry.recordedBy || 'Staf SESIQ');
       setPrintValue(printCreatedAt, formatDateTime(entry.createdAt));
       setPrintValue(printGeneratedAt, formatDateTime(Date.now()));
       printSheet.classList.remove('hidden');
@@ -869,15 +899,15 @@
         const matchesStatus = status === 'all' || item.status === status;
         const matchesQuery =
           !query ||
-          item.studentName.toLowerCase().includes(query) ||
-          item.className.toLowerCase().includes(query) ||
+          (item.studentName || '').toLowerCase().includes(query) ||
+          (item.className || '').toLowerCase().includes(query) ||
           (item.studentId || '').toLowerCase().includes(query) ||
           (item.phone || '').toLowerCase().includes(query) ||
           (item.referenceNumber || '').toLowerCase().includes(query) ||
           (item.serviceFocus || '').toLowerCase().includes(query) ||
           (item.recordedBy || '').toLowerCase().includes(query) ||
-          item.sessionNotes.toLowerCase().includes(query) ||
-          item.actions.toLowerCase().includes(query);
+          (item.sessionNotes || '').toLowerCase().includes(query) ||
+          (item.actions || '').toLowerCase().includes(query);
         return matchesStatus && matchesQuery;
       });
 
@@ -889,46 +919,51 @@
       const followUp = entries.filter((i) => i.status === 'Perlu susulan').length;
       const callNeeded = entries.filter((i) => i.status === 'Perlu di panggil').length;
       const done = entries.filter((i) => i.status === 'Selesai').length;
-      totalCount.textContent = total;
-      inProgressCount.textContent = inProgress;
-      followUpCount.textContent = followUp;
-      callCount.textContent = callNeeded;
-      doneCount.textContent = done;
+      SesiqUI.animateCount(totalCount, total);
+      SesiqUI.animateCount(inProgressCount, inProgress);
+      SesiqUI.animateCount(followUpCount, followUp);
+      SesiqUI.animateCount(callCount, callNeeded);
+      SesiqUI.animateCount(doneCount, done);
       updateStats();
 
-      filtered.forEach((item) => {
+      filtered.forEach((item, index) => {
         const row = document.createElement('tr');
+        row.style.setProperty('--i', index);
+        const statusText = item.status || '-';
+        const statusClass = (item.status || '').trim().replace(/\s+/g, '-').toLowerCase();
+        const safeId = escapeHtml(item.id);
+        // Hanya papar butiran yang ada, supaya rekod tidak sesak
+        const sub = (value, prefix = '') => (value ? `<div class="cell-sub">${prefix}${escapeHtml(value)}</div>` : '');
+        const contact = [item.studentId, item.phone].filter(Boolean).join(' · ');
         row.innerHTML = `
-          <td>
+          <td data-label="Tarikh">
             <div class="cell-strong">${formatDateTime(item.sessionDate)}</div>
-            <div class="cell-sub">Dicipta ${formatDateTime(item.createdAt)}</div>
+            ${sub(item.referenceNumber)}
           </td>
-          <td>
-            <div class="cell-strong">${item.studentName}</div>
-            <div class="cell-sub">${item.className || '-'}</div>
-            <div class="cell-sub">No KP: ${item.studentId || '-'}</div>
-            <div class="cell-sub">Tel: ${item.phone || '-'}</div>
-            <div class="cell-sub">Ref: ${item.referenceNumber || '-'}</div>
+          <td data-label="Murid">
+            <div class="cell-strong">${escapeHtml(item.studentName)}</div>
+            ${sub(item.className)}
+            ${sub(contact)}
           </td>
-          <td>
-            <div class="tag tight">${item.sessionType}</div>
-            <div class="status ${item.status.replace(/\\s+/g, '-').toLowerCase()}">${item.status}</div>
-            <div class="cell-sub">Fokus: ${item.serviceFocus || '-'}</div>
-            <div class="cell-sub">Kaunselor: ${item.recordedBy || 'Staf CSD'}</div>
+          <td data-label="Sesi">
+            <div class="status ${escapeHtml(statusClass)}">${escapeHtml(statusText)}</div>
+            <div class="tag tight">${escapeHtml(item.sessionType || '-')}</div>
+            ${sub(item.serviceFocus)}
+            ${sub(item.recordedBy)}
           </td>
-          <td>
-            <div class="cell-strong">${item.sessionNotes}</div>
-            <div class="cell-sub">Tindakan: ${item.actions}</div>
+          <td data-label="Ringkasan">
+            <div class="cell-strong">${escapeHtml(item.sessionNotes)}</div>
+            ${sub(item.actions, 'Tindakan: ')}
           </td>
-          <td>
-            ${item.followUp ? `<div class="cell-strong">${formatDateTime(item.followUp)}</div>` : '<div class="cell-sub">Tiada susulan</div>'}
-            ${item.location ? `<div class="cell-sub">${item.location}</div>` : ''}
+          <td data-label="Susulan">
+            ${item.followUp ? `<div class="cell-strong">${formatDate(item.followUp)}</div>` : '<div class="cell-sub">Tiada</div>'}
+            ${sub(item.location)}
           </td>
           <td>
             <div class="table-actions">
-              <button class="ghost small" data-edit="${item.id}">Edit</button>
-              <button class="ghost small" data-print="${item.id}">Cetak</button>
-              <button class="ghost danger small" data-delete="${item.id}">Padam</button>
+              <button class="ghost small" data-edit="${safeId}">Edit</button>
+              <button class="ghost small" data-print="${safeId}">Cetak</button>
+              <button class="ghost danger small" data-delete="${safeId}">Padam</button>
             </div>
           </td>
         `;
@@ -963,11 +998,11 @@
         wrap.className = 'upload-item';
         wrap.innerHTML = `
           <div class="upload-meta">
-            <div class="cell-strong">${item.name || 'Tanpa nama'}</div>
+            <div class="cell-strong">${escapeHtml(item.name || 'Tanpa nama')}</div>
             <div class="cell-sub">${Math.round((item.size || 0) / 1024)} KB | ${formatDateTime(item.createdAt)}</div>
           </div>
           <div class="upload-actions">
-            <a class="ghost small" href="${item.url}" target="_blank" rel="noopener noreferrer">Lihat</a>
+            <a class="ghost small" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Lihat</a>
           </div>
         `;
         uploadsList.appendChild(wrap);
@@ -988,8 +1023,12 @@
       });
     };
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (!currentUser) {
+        SesiqUI.showToast('Sila log masuk semula.', 'error');
+        return;
+      }
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
       const programCode = data.programCode || '';
@@ -997,7 +1036,7 @@
       const programSemester = data.programSemester ? `Sem ${data.programSemester}` : '';
       const classCombined = [programCode, programLevel, programSemester].filter(Boolean).join(' - ');
       const recordedByValueRaw = data.recordedBy === 'Lain-lain' ? data.recordedByOther : data.recordedBy;
-      const recordedByValue = (recordedByValueRaw || '').trim() || (currentUser?.displayName || currentUser?.email || 'Staf CSD');
+      const recordedByValue = (recordedByValueRaw || '').trim() || (currentUser?.displayName || currentUser?.email || 'Staf SESIQ');
       const referenceNumberValue =
         (data.referenceNumber || '').trim() || getNextReferenceNumber(data.sessionDate);
       const basePayload = {
@@ -1018,16 +1057,30 @@
         uid: currentUser?.uid || ''
       };
 
-      if (editingId) {
-        db.ref(`sessions/${currentUser.uid}/${editingId}`).update(basePayload);
-      } else {
-        db.ref(`sessions/${currentUser.uid}`).push({
-          ...basePayload,
-          createdAt: firebase.database.ServerValue.TIMESTAMP
-        });
+      const submitLabel = submitButton.textContent;
+      submitButton.disabled = true;
+      const wasEditing = Boolean(editingId);
+      submitButton.classList.add('loading');
+      try {
+        if (editingId) {
+          await db.ref(`sessions/${currentUser.uid}/${editingId}`).update(basePayload);
+        } else {
+          await db.ref(`sessions/${currentUser.uid}`).push({
+            ...basePayload,
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+          });
+        }
+        cancelEdit();
+        SesiqUI.showToast(wasEditing ? 'Rekod dikemaskini.' : 'Rekod sesi disimpan.');
+      } catch (error) {
+        // Kekalkan isi borang supaya data tidak hilang
+        console.error('Ralat menyimpan rekod:', error);
+        SesiqUI.showToast('Gagal menyimpan rekod. Semak sambungan internet dan cuba lagi.', 'error', 6000);
+        submitButton.textContent = submitLabel;
+      } finally {
+        submitButton.classList.remove('loading');
+        submitButton.disabled = false;
       }
-
-      cancelEdit();
     });
 
     recordedBySelect.addEventListener('change', toggleRecordedByOther);
@@ -1049,7 +1102,11 @@
       const confirmSecond = confirm('Yakin padam semua rekod?');
       if (!confirmSecond) return;
       if (!currentUser) return;
-      db.ref(`sessions/${currentUser.uid}`).remove();
+      db.ref(`sessions/${currentUser.uid}`).remove().catch((error) => {
+        console.error('Ralat memadam semua rekod:', error);
+        SesiqUI.showToast('Gagal memadam rekod. Sila cuba lagi.', 'error', 5000);
+      });
+      SesiqUI.showToast('Semua rekod dipadam.', 'info');
       cancelEdit();
     });
 
@@ -1072,34 +1129,42 @@
     ];
 
     const formatCsvRows = (items) => {
-      const escape = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+      const escape = (val) => {
+        let text = String(val ?? '');
+        // Elak formula Excel daripada input pengguna (CSV injection)
+        if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+        return `"${text.replace(/"/g, '""')}"`;
+      };
+      // Simpan nombor panjang (No KP / telefon) sebagai teks supaya Excel tidak tukar ke 1.02E+11
+      const asText = (val) => (val ? `="${String(val).replace(/"/g, '')}"` : '');
       const rows = items.map((item) => [
         formatDateTime(item.sessionDate),
         item.referenceNumber || '',
         item.studentName,
-        item.studentId || '',
-        item.phone || '',
+        { raw: asText(item.studentId) },
+        { raw: asText(item.phone) },
         item.className,
         item.sessionType,
         item.serviceFocus || '',
         item.status,
         item.sessionNotes,
         item.actions,
-        item.followUp ? formatDateTime(item.followUp) : '',
+        item.followUp ? formatDate(item.followUp) : '',
         item.recordedBy || '',
         item.location || '',
         formatDateTime(item.createdAt)
       ]);
-      return [csvHeader, ...rows].map((row) => row.map(escape).join(',')).join('\n');
+      const cell = (val) => (val && typeof val === 'object' && 'raw' in val ? `"${val.raw.replace(/"/g, '""')}"` : escape(val));
+      return [csvHeader, ...rows].map((row) => row.map(cell).join(',')).join('\r\n');
     };
 
     const downloadCsv = (items, filenamePrefix, emptyMessage = 'Tiada rekod dalam tempoh ini.') => {
       if (!items.length) {
-        alert(emptyMessage);
+        SesiqUI.showToast(emptyMessage, 'info');
         return;
       }
       const csv = formatCsvRows(items);
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -1108,6 +1173,7 @@
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+      SesiqUI.showToast(`CSV dimuat turun (${items.length} rekod).`);
     };
 
     const getEntriesByPeriod = (period) => {
@@ -1132,7 +1198,10 @@
     });
 
     tabButtons.forEach((btn) => {
-      btn.addEventListener('click', () => activateTab(btn.dataset.target));
+      btn.addEventListener('click', () => {
+        activateTab(btn.dataset.target);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     });
 
     chartToggleButtons.forEach((btn) => {
@@ -1194,13 +1263,23 @@
         'Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun',
         'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'
       ];
-      statsMonth.innerHTML = months
-        .map((name, idx) => `<option value="${idx}" ${idx === now.getMonth() ? 'selected' : ''}>${name}</option>`)
-        .join('');
-      const allowedYears = [2026, 2027, 2028, 2029, 2030];
-      const defaultYear = allowedYears.includes(now.getFullYear()) ? now.getFullYear() : allowedYears[0];
-      statsYear.innerHTML = allowedYears
-        .map((y) => `<option value="${y}" ${y === defaultYear ? 'selected' : ''}>${y}</option>`)
+      if (!statsMonth.options.length) {
+        statsMonth.innerHTML = months
+          .map((name, idx) => `<option value="${idx}" ${idx === now.getMonth() ? 'selected' : ''}>${name}</option>`)
+          .join('');
+      }
+      // Senarai tahun dijana daripada rekod sedia ada + tahun semasa
+      const currentYear = now.getFullYear();
+      const entryYears = entries
+        .map((item) => new Date(item.sessionDate).getFullYear())
+        .filter((y) => Number.isFinite(y));
+      const minYear = Math.min(currentYear, ...entryYears);
+      const maxYear = Math.max(currentYear, ...entryYears);
+      const selectedYear = Number(statsYear.value) || currentYear;
+      const years = [];
+      for (let y = maxYear; y >= minYear; y -= 1) years.push(y);
+      statsYear.innerHTML = years
+        .map((y) => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`)
         .join('');
     };
 
@@ -1212,7 +1291,7 @@
         auth.signOut().then(() => {
           detachEntries();
           detachUploads();
-          window.location.href = 'index.html';
+          SesiqUI.leaveTo('index.html');
         });
       });
     }
@@ -1238,8 +1317,9 @@
           return;
         }
         currentUser = user;
-        const displayName = user.displayName || user.email || 'Staf CSD';
-        userBadge.textContent = `Guru: ${displayName}`;
+        const displayName = user.displayName || user.email || 'Staf SESIQ';
+        userBadge.textContent = displayName;
+        userBadge.title = displayName;
         populateMonthYear();
         listenEntries(user.uid);
         listenUploads(user.uid);
