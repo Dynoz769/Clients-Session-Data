@@ -52,5 +52,51 @@
     }, 250);
   };
 
-  window.SesiqUI = { showToast, animateCount, leaveTo };
+  // Tema cerah/gelap: pilihan pengguna disimpan; jika tiada, ikut sistem
+  const THEME_KEY = 'sesiq-theme';
+  const root = document.documentElement;
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const readSaved = () => {
+    try {
+      const value = localStorage.getItem(THEME_KEY);
+      return value === 'light' || value === 'dark' ? value : null;
+    } catch (error) {
+      return null;
+    }
+  };
+  const applyTheme = (theme, animate = false) => {
+    if (animate && !reduceMotion) {
+      root.classList.add('theme-anim');
+      setTimeout(() => root.classList.remove('theme-anim'), 400);
+    }
+    root.dataset.theme = theme;
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.setAttribute('content', theme === 'dark' ? '#0e0f11' : '#f7f7f5');
+      meta.removeAttribute('media');
+    });
+    document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+      const label = theme === 'dark' ? 'Tukar ke mod cerah' : 'Tukar ke mod gelap';
+      btn.setAttribute('aria-label', label);
+      btn.title = label;
+    });
+  };
+  const toggleTheme = () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch (error) {
+      // Tetap tukar walaupun storan tidak tersedia
+    }
+    applyTheme(next, true);
+  };
+
+  applyTheme(readSaved() || (systemDark.matches ? 'dark' : 'light'));
+  systemDark.addEventListener('change', (event) => {
+    if (!readSaved()) applyTheme(event.matches ? 'dark' : 'light', true);
+  });
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('[data-theme-toggle]')) toggleTheme();
+  });
+
+  window.SesiqUI = { showToast, animateCount, leaveTo, toggleTheme };
 })();

@@ -7,6 +7,17 @@
   <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)" />
   <link rel="icon" href="logo.jpeg" />
+  <script>
+    // Tetapkan tema sebelum halaman dilukis supaya tiada kelipan
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem('sesiq-theme'); } catch (e) {}
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -28,13 +39,14 @@
       </nav>
       <div class="user-menu">
         <span class="user-name" id="userBadge">-</span>
+        <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Tukar tema" title="Tukar tema"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
         <button class="icon-btn" type="button" id="logoutButton" title="Log keluar" aria-label="Log keluar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></button>
       </div>
     </div>
   </header>
 
   <div class="shell" id="appShell">
-    <section class="montage-banner reveal" aria-hidden="true">
+    <section class="montage-banner overview reveal" aria-hidden="true">
       <div class="montage-track">
           <div class="montage-frame"><img src="gambar1.jpeg" decoding="async" alt="" /></div>
           <div class="montage-frame"><img src="gambar2.jpeg" decoding="async" alt="" /></div>
@@ -60,14 +72,15 @@
       </div>
     </section>
 
-    <div class="page-head reveal" style="--d: 1">
+    <div class="page-head overview reveal" style="--d: 1">
       <div>
         <p class="eyebrow" id="currentDate">Hari ini</p>
-        <h1>Rekod sesi</h1>
+        <h1 id="greeting">Selamat datang</h1>
+        <p class="hint" id="greetingSub">Memuatkan rekod...</p>
       </div>
     </div>
 
-    <section class="stat-grid reveal" style="--d: 2">
+    <section class="stat-grid overview reveal" style="--d: 2">
       <div class="stat-card">
         <p class="stat-label">Jumlah rekod</p>
         <div class="stat-value" id="totalCount">0</div>
@@ -95,7 +108,17 @@
       </div>
     </section>
 
-    <main class="content-panels reveal" style="--d: 3">
+    <section class="today-card overview reveal" style="--d: 3" aria-labelledby="todayTitle">
+      <div class="today-head">
+        <h2 id="todayTitle">Tindakan hari ini</h2>
+        <span class="count-pill" id="todayCount">0</span>
+      </div>
+      <ul class="today-list" id="todayList"></ul>
+      <p class="today-empty" id="todayEmpty">Tiada tindakan segera. Semua terkawal.</p>
+      <button type="button" class="link-btn today-more" id="todayMore" hidden>Lihat semua</button>
+    </section>
+
+    <main class="content-panels reveal" style="--d: 4">
       <section class="panel form-panel" id="formSection">
         <div class="panel-header">
           <div>
@@ -265,6 +288,26 @@
               <option value="Perlu susulan">Perlu susulan</option>
               <option value="Perlu di panggil">Perlu di panggil</option>
             </select>
+            <select id="programFilter" aria-label="Tapis program">
+              <option value="all">Semua program</option>
+              <option value="BKP1">BKP1</option>
+              <option value="BKP2">BKP2</option>
+              <option value="KSK1">KSK1</option>
+              <option value="KSK2">KSK2</option>
+              <option value="BPR1">BPR1</option>
+              <option value="BPR2">BPR2</option>
+              <option value="BPM1">BPM1</option>
+              <option value="BPM2">BPM2</option>
+              <option value="BPP1">BPP1</option>
+              <option value="BPP2">BPP2</option>
+            </select>
+            <select id="periodFilter" class="period-filter" aria-label="Tapis tempoh">
+              <option value="all">Semua masa</option>
+              <option value="7d">7 hari lepas</option>
+              <option value="30d">30 hari lepas</option>
+              <option value="thisMonth">Bulan ini</option>
+              <option value="thisYear">Tahun ini</option>
+            </select>
             <button type="button" class="ghost" id="exportCsv">Export CSV</button>
             <button type="button" class="ghost subtle danger" id="clearLog">Padam semua</button>
           </div>
@@ -362,6 +405,37 @@
         <div class="chart-card">
           <div class="chart-header">
             <div>
+              <h3>Trend 6 bulan</h3>
+              <p class="hint">Jumlah sesi sehingga bulan dipilih.</p>
+            </div>
+          </div>
+          <div class="trend" id="trendChart"></div>
+        </div>
+
+        <div class="breakdown-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Jenis sesi</h3>
+                <p class="hint breakdown-period">Tahun dipilih</p>
+              </div>
+            </div>
+            <div class="breakdown" id="typeBreakdown"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Fokus perkhidmatan</h3>
+                <p class="hint breakdown-period">Tahun dipilih</p>
+              </div>
+            </div>
+            <div class="breakdown" id="focusBreakdown"></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
               <h3>Muat turun CSV</h3>
               <p class="hint">Ikut bulan/tahun yang dipilih di atas.</p>
             </div>
@@ -392,6 +466,27 @@
       -->
     </main>
   </div>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="detailDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" inert>
+    <div class="drawer-grip" aria-hidden="true"></div>
+    <div class="drawer-head">
+      <div class="person">
+        <span class="avatar lg" id="drawerAvatar"></span>
+        <div>
+          <h2 id="drawerTitle">-</h2>
+          <p class="hint" id="drawerSub"></p>
+        </div>
+      </div>
+      <button type="button" class="icon-btn" id="drawerClose" aria-label="Tutup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-foot">
+      <button type="button" class="ghost subtle danger" id="drawerDelete">Padam</button>
+      <button type="button" class="ghost" id="drawerPrint">Cetak</button>
+      <button type="button" class="primary" id="drawerEdit">Edit rekod</button>
+    </div>
+  </aside>
 
   <div id="printSheet" class="print-sheet hidden" aria-hidden="true">
     <div class="print-card">
@@ -562,6 +657,31 @@
     const printReference = document.getElementById('printReference');
     const printStudentId = document.getElementById('printStudentId');
     const printPhone = document.getElementById('printPhone');
+    const greetingEl = document.getElementById('greeting');
+    const greetingSub = document.getElementById('greetingSub');
+    const todayList = document.getElementById('todayList');
+    const todayCount = document.getElementById('todayCount');
+    const todayEmpty = document.getElementById('todayEmpty');
+    const todayMore = document.getElementById('todayMore');
+    const programFilter = document.getElementById('programFilter');
+    const periodFilter = document.getElementById('periodFilter');
+    const trendChart = document.getElementById('trendChart');
+    const typeBreakdown = document.getElementById('typeBreakdown');
+    const focusBreakdown = document.getElementById('focusBreakdown');
+    const breakdownPeriodLabels = document.querySelectorAll('.breakdown-period');
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerAvatar = document.getElementById('drawerAvatar');
+    const drawerTitle = document.getElementById('drawerTitle');
+    const drawerSub = document.getElementById('drawerSub');
+    const drawerBody = document.getElementById('drawerBody');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerEdit = document.getElementById('drawerEdit');
+    const drawerPrint = document.getElementById('drawerPrint');
+    const drawerDelete = document.getElementById('drawerDelete');
+
+    const MONTHS_SHORT = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
+    const LAST_COUNSELOR_KEY = 'sesiq-last-counselor';
 
     let entries = [];
     let editingId = null;
@@ -573,6 +693,9 @@
     let uploadsQuery = null;
     let uploadsListener = null;
     let chartPeriod = 'week';
+    let todayExpanded = false;
+    let drawerEntryId = null;
+    let drawerReturnFocus = null;
 
     const toggleRecordedByOther = () => {
       const isOther = recordedBySelect.value === 'Lain-lain';
@@ -616,6 +739,35 @@
         year: 'numeric'
       });
     };
+
+    // Tarikh tempatan dalam format YYYY-MM-DD (untuk banding dengan tarikh susulan)
+    const localDateKey = (date = new Date()) =>
+      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+    const daysBetween = (fromKey, toKey) => {
+      const [fy, fm, fd] = fromKey.split('-').map(Number);
+      const [ty, tm, td] = toKey.split('-').map(Number);
+      return Math.round((new Date(ty, tm - 1, td) - new Date(fy, fm - 1, fd)) / 86400000);
+    };
+
+    const NAME_FILLERS = ['bin', 'binti', 'bt', 'bte', 'b', 'a/l', 'a/p', 'al', 'ap'];
+    const initials = (name) => {
+      const words = String(name || '')
+        .split(/\s+/)
+        .filter((w) => w && !NAME_FILLERS.includes(w.toLowerCase()));
+      const letters = words.slice(0, 2).map((w) => w[0]).join('');
+      return (letters || '?').toUpperCase();
+    };
+
+    // Warna avatar tetap untuk setiap nama
+    const avatarHue = (name) => {
+      let hash = 0;
+      for (const ch of String(name || '')) hash = (hash * 31 + ch.charCodeAt(0)) % 360;
+      return hash;
+    };
+
+    const avatarHtml = (name, size = '') =>
+      `<span class="avatar ${size}" style="--h: ${avatarHue(name)}" aria-hidden="true">${escapeHtml(initials(name))}</span>`;
 
     const parseReferenceNumber = (ref) => {
       if (!ref) return null;
@@ -766,19 +918,48 @@
       if (programLevelSelect) programLevelSelect.value = '';
       if (programSemesterSelect) programSemesterSelect.value = '';
       toggleRecordedByOther();
-      prefillReferenceNumber();
+      // Butang "Kosongkan" mengosongkan borang selepas event reset, jadi isi semula selepas itu
+      setTimeout(() => {
+        if (editingId) return;
+        applyLastCounselor();
+        prefillReferenceNumber();
+      }, 0);
+    };
+
+    const saveLastCounselor = (selectValue, otherValue) => {
+      try {
+        localStorage.setItem(LAST_COUNSELOR_KEY, JSON.stringify({ selectValue, otherValue }));
+      } catch (error) {
+        // Abaikan jika storan tidak tersedia
+      }
+    };
+
+    const applyLastCounselor = () => {
+      if (recordedBySelect.value) return;
+      try {
+        const saved = JSON.parse(localStorage.getItem(LAST_COUNSELOR_KEY) || 'null');
+        if (!saved || !saved.selectValue) return;
+        const exists = Array.from(recordedBySelect.options).some((opt) => opt.value === saved.selectValue);
+        if (!exists) return;
+        recordedBySelect.value = saved.selectValue;
+        toggleRecordedByOther();
+        if (saved.selectValue === 'Lain-lain') recordedByOther.value = saved.otherValue || '';
+      } catch (error) {
+        // Abaikan data simpanan yang rosak
+      }
     };
 
     const deleteEntry = (id) => {
       const confirmDelete = confirm('Padam rekod ini?');
-      if (!confirmDelete) return;
-      if (!currentUser) return;
+      if (!confirmDelete) return false;
+      if (!currentUser) return false;
       db.ref(`sessions/${currentUser.uid}/${id}`).remove().catch((error) => {
         console.error('Ralat memadam rekod:', error);
         SesiqUI.showToast('Gagal memadam rekod. Sila cuba lagi.', 'error', 5000);
       });
       SesiqUI.showToast('Rekod dipadam.', 'info');
       if (editingId === id) cancelEdit();
+      return true;
     };
 
     const getPeriodRange = (period) => {
@@ -835,6 +1016,100 @@
       SesiqUI.animateCount(yearlyTotal, year.total);
       yearlyFoot.textContent = foot(year);
       updateChart(chartPeriod);
+      renderTrend();
+      renderBreakdowns();
+    };
+
+    const renderTrend = () => {
+      if (!trendChart) return;
+      const now = new Date();
+      const endYear = Number(statsYear.value) || now.getFullYear();
+      const endMonth = statsMonth.value === '' ? now.getMonth() : Number(statsMonth.value);
+      const months = [];
+      for (let i = 5; i >= 0; i -= 1) {
+        const d = new Date(endYear, endMonth - i, 1);
+        months.push({ year: d.getFullYear(), month: d.getMonth(), count: 0 });
+      }
+      entries.forEach((item) => {
+        const d = new Date(item.sessionDate);
+        if (!Number.isFinite(d.getTime())) return;
+        const slot = months.find((m) => m.year === d.getFullYear() && m.month === d.getMonth());
+        if (slot) slot.count += 1;
+      });
+      const max = Math.max(...months.map((m) => m.count), 1);
+      // Titik diletakkan di tengah setiap lajur supaya sejajar dengan label
+      const points = months.map((m, i) => ({
+        x: ((i + 0.5) / months.length) * 100,
+        y: 88 - (m.count / max) * 72,
+        ...m
+      }));
+      const line = points.map((pt) => `${pt.x},${pt.y}`).join(' ');
+      const area = `M${points[0].x},100 L${line.replace(/ /g, ' L')} L${points[points.length - 1].x},100 Z`;
+      trendChart.innerHTML = `
+        <div class="trend-plot">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path class="trend-area" d="${area}" />
+            <polyline class="trend-line" points="${line}" />
+          </svg>
+          ${points
+            .map(
+              (pt, i) =>
+                `<span class="trend-dot" style="left:${pt.x}%;top:${pt.y}%;--i:${i}"><b>${pt.count}</b></span>`
+            )
+            .join('')}
+        </div>
+        <div class="trend-labels">
+          ${points.map((pt) => `<span>${MONTHS_SHORT[pt.month]}</span>`).join('')}
+        </div>
+      `;
+      trendChart.setAttribute(
+        'aria-label',
+        points.map((pt) => `${MONTHS_SHORT[pt.month]} ${pt.year}: ${pt.count} sesi`).join(', ')
+      );
+      trendChart.setAttribute('role', 'img');
+    };
+
+    const renderBreakdownList = (container, counts, order) => {
+      if (!container) return;
+      const keys = [...order.filter((k) => counts[k]), ...Object.keys(counts).filter((k) => !order.includes(k))];
+      if (!keys.length) {
+        container.innerHTML = '<p class="hint">Tiada sesi dalam tahun ini.</p>';
+        return;
+      }
+      const max = Math.max(...keys.map((k) => counts[k]), 1);
+      container.innerHTML = keys
+        .map(
+          (k) => `
+          <div class="break-row">
+            <span class="break-label">${escapeHtml(k)}</span>
+            <span class="break-value">${counts[k]}</span>
+            <span class="chart-track"><span class="chart-bar-fill" style="width:${Math.max((counts[k] / max) * 100, 3)}%"></span></span>
+          </div>`
+        )
+        .join('');
+    };
+
+    const renderBreakdowns = () => {
+      const year = Number(statsYear.value) || new Date().getFullYear();
+      breakdownPeriodLabels.forEach((el) => {
+        el.textContent = `Tahun ${year}`;
+      });
+      const byType = {};
+      const byFocus = {};
+      entries.forEach((item) => {
+        const d = new Date(item.sessionDate);
+        if (!Number.isFinite(d.getTime()) || d.getFullYear() !== year) return;
+        const type = item.sessionType || 'Tidak dinyatakan';
+        const focus = item.serviceFocus || 'Tidak dinyatakan';
+        byType[type] = (byType[type] || 0) + 1;
+        byFocus[focus] = (byFocus[focus] || 0) + 1;
+      });
+      const optionValues = (id) =>
+        Array.from(document.getElementById(id).options)
+          .map((o) => o.value)
+          .filter(Boolean);
+      renderBreakdownList(typeBreakdown, byType, optionValues('sessionType'));
+      renderBreakdownList(focusBreakdown, byFocus, optionValues('serviceFocus'));
     };
 
     const updateChart = (period) => {
@@ -892,11 +1167,169 @@
       showPrintSheet(entry);
     };
 
+    const getFilterPeriodStart = (value) => {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      if (value === '7d') start.setDate(start.getDate() - 6);
+      else if (value === '30d') start.setDate(start.getDate() - 29);
+      else if (value === 'thisMonth') start.setDate(1);
+      else if (value === 'thisYear') start.setMonth(0, 1);
+      else return null;
+      return start;
+    };
+
+    // Rekod yang perlu tindakan: susulan hari ini / lewat, atau perlu dipanggil
+    const getActionItems = () => {
+      const today = localDateKey();
+      return entries
+        .filter((item) => item.status !== 'Selesai')
+        .map((item) => {
+          const followKey = /^\d{4}-\d{2}-\d{2}$/.test(item.followUp || '') ? item.followUp : '';
+          if (followKey && followKey <= today) {
+            const late = daysBetween(followKey, today);
+            return {
+              item,
+              rank: 0,
+              sortKey: followKey,
+              tone: late > 0 ? 'rose' : 'amber',
+              label: late > 0 ? `Susulan lewat ${late} hari` : 'Susulan hari ini'
+            };
+          }
+          if (item.status === 'Perlu di panggil') {
+            return { item, rank: 1, sortKey: item.sessionDate || '', tone: 'orange', label: 'Perlu dipanggil' };
+          }
+          return null;
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.rank - b.rank || String(a.sortKey).localeCompare(String(b.sortKey)));
+    };
+
+    const renderToday = () => {
+      if (!todayList) return;
+      const items = getActionItems();
+      const limit = 4;
+      const visible = todayExpanded ? items : items.slice(0, limit);
+      SesiqUI.animateCount(todayCount, items.length);
+      todayCount.classList.toggle('zero', items.length === 0);
+      todayEmpty.hidden = items.length > 0;
+      todayMore.hidden = items.length <= limit;
+      todayMore.textContent = todayExpanded ? 'Tunjuk kurang' : `Lihat semua (${items.length})`;
+      const html = visible
+        .map(
+          ({ item, tone, label }, i) => `
+          <li style="--i:${i}">
+            <button type="button" class="today-item" data-open="${escapeHtml(item.id)}">
+              ${avatarHtml(item.studentName)}
+              <span class="today-main">
+                <span class="today-name">${escapeHtml(item.studentName)}</span>
+                <span class="cell-sub">${escapeHtml(item.className || item.sessionType || '')}</span>
+              </span>
+              <span class="today-tag" data-tone="${tone}">${label}</span>
+            </button>
+          </li>`
+        )
+        .join('');
+      // Elak animasi berulang ketika carian/penapis berubah
+      if (html !== todayList.dataset.html) {
+        todayList.innerHTML = html;
+        todayList.dataset.html = html;
+      }
+      if (greetingSub) {
+        greetingSub.textContent = items.length
+          ? `Anda ada ${items.length} tindakan yang perlu diberi perhatian.`
+          : 'Tiada tindakan segera hari ini.';
+      }
+    };
+
+    const updateGreeting = (user) => {
+      if (!greetingEl) return;
+      const hour = new Date().getHours();
+      const part = hour < 12 ? 'pagi' : hour < 14 ? 'tengah hari' : hour < 19 ? 'petang' : 'malam';
+      const raw = user?.displayName || (user?.email || '').split('@')[0] || '';
+      const name = raw
+        .replace(/[._-]+/g, ' ')
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ');
+      greetingEl.textContent = name ? `Selamat ${part}, ${name}` : `Selamat ${part}`;
+    };
+
+    // ============ Panel butiran rekod ============
+    const detailRow = (label, value, extraClass = '') =>
+      value ? `<div class="detail-row"><dt>${label}</dt><dd class="${extraClass}">${escapeHtml(value)}</dd></div>` : '';
+
+    const openDrawer = (id) => {
+      const item = entries.find((entry) => entry.id === id);
+      if (!item || !drawer) return;
+      drawerEntryId = id;
+      drawerReturnFocus = document.activeElement;
+      const statusClass = (item.status || '').trim().replace(/\s+/g, '-').toLowerCase();
+      drawerAvatar.style.setProperty('--h', avatarHue(item.studentName));
+      drawerAvatar.textContent = initials(item.studentName);
+      drawerTitle.textContent = item.studentName || '-';
+      drawerSub.textContent = [item.className, item.referenceNumber].filter(Boolean).join(' · ');
+      drawerBody.innerHTML = `
+        <div class="drawer-tags">
+          <span class="status ${escapeHtml(statusClass)}">${escapeHtml(item.status || '-')}</span>
+          ${item.sessionType ? `<span class="tag">${escapeHtml(item.sessionType)}</span>` : ''}
+        </div>
+        <section class="detail-group">
+          <h3>Sesi</h3>
+          <dl>
+            ${detailRow('Tarikh & masa', formatDateTime(item.sessionDate))}
+            ${detailRow('Lokasi', item.location)}
+            ${detailRow('Fokus', item.serviceFocus)}
+            ${detailRow('Kaunselor', item.recordedBy)}
+            ${detailRow('Susulan', item.followUp ? formatDate(item.followUp) : '')}
+          </dl>
+        </section>
+        <section class="detail-group">
+          <h3>Catatan</h3>
+          <dl>
+            ${detailRow('Ringkasan', item.sessionNotes, 'pre-line')}
+            ${detailRow('Tindakan', item.actions, 'pre-line')}
+          </dl>
+        </section>
+        <section class="detail-group">
+          <h3>Murid</h3>
+          <dl>
+            ${detailRow('No KP', item.studentId)}
+            ${detailRow('Telefon', item.phone)}
+            ${detailRow('Program', item.className)}
+            ${detailRow('Dicipta', item.createdAt ? formatDateTime(item.createdAt) : '')}
+          </dl>
+        </section>
+      `;
+      drawer.removeAttribute('inert');
+      drawer.classList.add('open');
+      drawerOverlay.classList.add('open');
+      document.body.classList.add('drawer-open');
+      drawerBody.scrollTop = 0;
+      setTimeout(() => drawerClose.focus(), 50);
+    };
+
+    const closeDrawer = () => {
+      if (!drawer || !drawer.classList.contains('open')) return;
+      drawer.classList.remove('open');
+      drawerOverlay.classList.remove('open');
+      drawer.setAttribute('inert', '');
+      document.body.classList.remove('drawer-open');
+      drawerEntryId = null;
+      if (drawerReturnFocus && document.contains(drawerReturnFocus)) drawerReturnFocus.focus();
+    };
+
     const render = () => {
       const query = searchInput.value.trim().toLowerCase();
       const status = statusFilter.value;
+      const program = programFilter ? programFilter.value : 'all';
+      const periodStart = getFilterPeriodStart(periodFilter ? periodFilter.value : 'all');
       const filtered = entries.filter((item) => {
         const matchesStatus = status === 'all' || item.status === status;
+        const matchesProgram = program === 'all' || (item.className || '').split(' - ')[0].trim() === program;
+        const sessionTime = new Date(item.sessionDate).getTime();
+        const matchesPeriod = !periodStart || (Number.isFinite(sessionTime) && sessionTime >= periodStart.getTime());
         const matchesQuery =
           !query ||
           (item.studentName || '').toLowerCase().includes(query) ||
@@ -908,7 +1341,7 @@
           (item.recordedBy || '').toLowerCase().includes(query) ||
           (item.sessionNotes || '').toLowerCase().includes(query) ||
           (item.actions || '').toLowerCase().includes(query);
-        return matchesStatus && matchesQuery;
+        return matchesStatus && matchesProgram && matchesPeriod && matchesQuery;
       });
 
       filteredCache = filtered;
@@ -941,9 +1374,14 @@
             ${sub(item.referenceNumber)}
           </td>
           <td data-label="Murid">
-            <div class="cell-strong">${escapeHtml(item.studentName)}</div>
-            ${sub(item.className)}
-            ${sub(contact)}
+            <div class="person">
+              ${avatarHtml(item.studentName)}
+              <div>
+                <div class="cell-strong">${escapeHtml(item.studentName)}</div>
+                ${sub(item.className)}
+                ${sub(contact)}
+              </div>
+            </div>
           </td>
           <td data-label="Sesi">
             <div class="status ${escapeHtml(statusClass)}">${escapeHtml(statusText)}</div>
@@ -975,6 +1413,18 @@
         if (editBtn) editBtn.addEventListener('click', () => startEdit(item.id));
         if (deleteBtn) deleteBtn.addEventListener('click', () => deleteEntry(item.id));
         if (printBtn) printBtn.addEventListener('click', () => printEntry(item.id));
+        row.tabIndex = 0;
+        row.setAttribute('aria-label', `Buka butiran ${item.studentName || 'rekod'}`);
+        row.addEventListener('click', (event) => {
+          if (event.target.closest('button')) return;
+          openDrawer(item.id);
+        });
+        row.addEventListener('keydown', (event) => {
+          if (event.target === row && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            openDrawer(item.id);
+          }
+        });
 
         logBody.appendChild(row);
       });
@@ -984,6 +1434,15 @@
       }
 
       emptyState.style.display = filtered.length ? 'none' : 'flex';
+      emptyState.textContent = entries.length
+        ? 'Tiada rekod yang sepadan dengan carian atau penapis.'
+        : 'Belum ada rekod. Isi borang untuk menambah.';
+      renderToday();
+      // Kemas kini panel butiran jika rekod yang dibuka berubah atau dipadam
+      if (drawerEntryId) {
+        if (entries.some((entry) => entry.id === drawerEntryId)) openDrawer(drawerEntryId);
+        else closeDrawer();
+      }
     };
 
     const renderUploads = () => {
@@ -1010,6 +1469,7 @@
     };
 
     const activateTab = (target) => {
+      document.body.dataset.tab = target;
       tabButtons.forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.target === target);
       });
@@ -1070,6 +1530,7 @@
             createdAt: firebase.database.ServerValue.TIMESTAMP
           });
         }
+        saveLastCounselor(data.recordedBy, data.recordedByOther);
         cancelEdit();
         SesiqUI.showToast(wasEditing ? 'Rekod dikemaskini.' : 'Rekod sesi disimpan.');
       } catch (error) {
@@ -1094,6 +1555,40 @@
 
     searchInput.addEventListener('input', render);
     statusFilter.addEventListener('change', render);
+    if (programFilter) programFilter.addEventListener('change', render);
+    if (periodFilter) periodFilter.addEventListener('change', render);
+
+    if (todayList) {
+      todayList.addEventListener('click', (event) => {
+        const btn = event.target.closest('[data-open]');
+        if (btn) openDrawer(btn.dataset.open);
+      });
+    }
+    if (todayMore) {
+      todayMore.addEventListener('click', () => {
+        todayExpanded = !todayExpanded;
+        renderToday();
+      });
+    }
+
+    if (drawer) {
+      drawerClose.addEventListener('click', closeDrawer);
+      drawerOverlay.addEventListener('click', closeDrawer);
+      drawerEdit.addEventListener('click', () => {
+        const id = drawerEntryId;
+        closeDrawer();
+        if (id) startEdit(id);
+      });
+      drawerPrint.addEventListener('click', () => {
+        if (drawerEntryId) printEntry(drawerEntryId);
+      });
+      drawerDelete.addEventListener('click', () => {
+        if (drawerEntryId && deleteEntry(drawerEntryId)) closeDrawer();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeDrawer();
+      });
+    }
 
     clearLogButton.addEventListener('click', () => {
       if (!entries.length) return;
@@ -1301,6 +1796,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      applyLastCounselor();
       toggleRecordedByOther();
       const today = new Date();
       currentDate.textContent = today.toLocaleDateString('ms-MY', {
@@ -1320,6 +1816,7 @@
         const displayName = user.displayName || user.email || 'Staf SESIQ';
         userBadge.textContent = displayName;
         userBadge.title = displayName;
+        updateGreeting(user);
         populateMonthYear();
         listenEntries(user.uid);
         listenUploads(user.uid);
