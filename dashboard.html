@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | CSD - Clients Session Data</title>
+  <title>Dashboard | SESIQ</title>
+  <meta name="theme-color" content="#060814" />
+  <link rel="icon" href="logo.jpeg" />
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -11,94 +13,107 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 </head>
 <body>
-  <div class="floating-banner">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-2">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-3">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-4">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-5">CSD - CLIENTS SESSION DATA</div>
-  <div class="floating-banner floating-banner-6">CSD - CLIENTS SESSION DATA</div>
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="shell" id="appShell">
-    <section class="montage-banner" aria-label="Montaj gambar CSD">
+    <section class="montage-banner reveal" aria-label="Montaj gambar SESIQ">
       <div class="montage-strip">
         <div class="montage-track">
-          <div class="montage-frame"><img src="gambar1.jpeg" alt="Moment 1" /></div>
-          <div class="montage-frame"><img src="gambar2.jpeg" alt="Moment 2" /></div>
-          <div class="montage-frame"><img src="gambar3.jpeg" alt="Moment 3" /></div>
-          <div class="montage-frame"><img src="gambar4.jpeg" alt="Moment 4" /></div>
-          <div class="montage-frame"><img src="gambar5.jpeg" alt="Moment 5" /></div>
-          <div class="montage-frame"><img src="gambar6.jpeg" alt="Moment 6" /></div>
-          <div class="montage-frame"><img src="gambar7.jpeg" alt="Moment 7" /></div>
-          <div class="montage-frame"><img src="gambar8.jpeg" alt="Moment 8" /></div>
-          <div class="montage-frame"><img src="gambar9.jpeg" alt="Moment 9" /></div>
-          <div class="montage-frame"><img src="gambar10.jpeg" alt="Moment 10" /></div>
+          <div class="montage-frame"><img src="gambar1.jpeg" decoding="async" alt="Moment 1" /></div>
+          <div class="montage-frame"><img src="gambar2.jpeg" decoding="async" alt="Moment 2" /></div>
+          <div class="montage-frame"><img src="gambar3.jpeg" decoding="async" alt="Moment 3" /></div>
+          <div class="montage-frame"><img src="gambar4.jpeg" decoding="async" alt="Moment 4" /></div>
+          <div class="montage-frame"><img src="gambar5.jpeg" decoding="async" alt="Moment 5" /></div>
+          <div class="montage-frame"><img src="gambar6.jpeg" decoding="async" alt="Moment 6" /></div>
+          <div class="montage-frame"><img src="gambar7.jpeg" decoding="async" alt="Moment 7" /></div>
+          <div class="montage-frame"><img src="gambar8.jpeg" decoding="async" alt="Moment 8" /></div>
+          <div class="montage-frame"><img src="gambar9.jpeg" decoding="async" alt="Moment 9" /></div>
+          <div class="montage-frame"><img src="gambar10.jpeg" decoding="async" alt="Moment 10" /></div>
           <!-- duplicate for seamless loop -->
-          <div class="montage-frame"><img src="gambar1.jpeg" alt="Moment 1" /></div>
-          <div class="montage-frame"><img src="gambar2.jpeg" alt="Moment 2" /></div>
-          <div class="montage-frame"><img src="gambar3.jpeg" alt="Moment 3" /></div>
-          <div class="montage-frame"><img src="gambar4.jpeg" alt="Moment 4" /></div>
-          <div class="montage-frame"><img src="gambar5.jpeg" alt="Moment 5" /></div>
-          <div class="montage-frame"><img src="gambar6.jpeg" alt="Moment 6" /></div>
-          <div class="montage-frame"><img src="gambar7.jpeg" alt="Moment 7" /></div>
-          <div class="montage-frame"><img src="gambar8.jpeg" alt="Moment 8" /></div>
-          <div class="montage-frame"><img src="gambar9.jpeg" alt="Moment 9" /></div>
-          <div class="montage-frame"><img src="gambar10.jpeg" alt="Moment 10" /></div>
+          <div class="montage-frame"><img src="gambar1.jpeg" decoding="async" alt="Moment 1" /></div>
+          <div class="montage-frame"><img src="gambar2.jpeg" decoding="async" alt="Moment 2" /></div>
+          <div class="montage-frame"><img src="gambar3.jpeg" decoding="async" alt="Moment 3" /></div>
+          <div class="montage-frame"><img src="gambar4.jpeg" decoding="async" alt="Moment 4" /></div>
+          <div class="montage-frame"><img src="gambar5.jpeg" decoding="async" alt="Moment 5" /></div>
+          <div class="montage-frame"><img src="gambar6.jpeg" decoding="async" alt="Moment 6" /></div>
+          <div class="montage-frame"><img src="gambar7.jpeg" decoding="async" alt="Moment 7" /></div>
+          <div class="montage-frame"><img src="gambar8.jpeg" decoding="async" alt="Moment 8" /></div>
+          <div class="montage-frame"><img src="gambar9.jpeg" decoding="async" alt="Moment 9" /></div>
+          <div class="montage-frame"><img src="gambar10.jpeg" decoding="async" alt="Moment 10" /></div>
         </div>
       </div>
     </section>
-    <header class="hero">
-      <div>
-        <p class="eyebrow">CSD - Clients Session Data</p>
-        <h1>CSD - Clients Session Data</h1>
-        <p class="lede">
-          Rekod ringkas, pantas, dan tersusun. Semak status, kemaskini, atau padam rekod bila perlu.
-        </p>
+    <header class="hero spotlight reveal" style="--d: 1">
+      <div class="brand">
+        <img src="logo.jpeg" alt="Logo SESIQ" class="brand-logo" />
+        <div>
+          <p class="eyebrow">Sistem Rekod Sesi Klien</p>
+          <h1 class="wordmark">SESI<span class="q">Q</span></h1>
+          <p class="lede">
+            Rekod ringkas, pantas, dan tersusun. Semak status, kemaskini, atau padam rekod bila perlu.
+          </p>
+        </div>
       </div>
       <div class="hero-meta">
         <div class="badge" id="currentDate">Hari ini</div>
         <div class="badge subtle" id="userBadge">Guru: -</div>
-        <button class="ghost" type="button" id="logoutButton">Log keluar</button>
+        <button class="ghost small" type="button" id="logoutButton">Log keluar</button>
       </div>
     </header>
 
     <section class="stat-grid">
-      <div class="stat-card">
-        <p class="stat-label">Jumlah rekod</p>
+      <div class="stat-card spotlight reveal" data-tone="accent" style="--d: 2">
+        <div class="stat-top">
+          <p class="stat-label">Jumlah rekod</p>
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+        </div>
         <div class="stat-value" id="totalCount">0</div>
         <p class="stat-foot">Semua sesi yang disimpan</p>
       </div>
-      <div class="stat-card">
-        <p class="stat-label">Dalam proses</p>
+      <div class="stat-card spotlight reveal" data-tone="warn" style="--d: 3">
+        <div class="stat-top">
+          <p class="stat-label">Dalam proses</p>
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        </div>
         <div class="stat-value" id="inProgressCount">0</div>
         <p class="stat-foot">Masih dipantau</p>
       </div>
-      <div class="stat-card">
-        <p class="stat-label">Perlu susulan</p>
+      <div class="stat-card spotlight reveal" data-tone="pink" style="--d: 4">
+        <div class="stat-top">
+          <p class="stat-label">Perlu susulan</p>
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/></svg></span>
+        </div>
         <div class="stat-value" id="followUpCount">0</div>
         <p class="stat-foot">Set tarikh susulan</p>
       </div>
-      <div class="stat-card">
-        <p class="stat-label">Perlu di panggil</p>
+      <div class="stat-card spotlight reveal" data-tone="cyan" style="--d: 5">
+        <div class="stat-top">
+          <p class="stat-label">Perlu di panggil</p>
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>
+        </div>
         <div class="stat-value" id="callCount">0</div>
         <p class="stat-foot">Menunggu panggilan/temu janji</p>
       </div>
-      <div class="stat-card">
-        <p class="stat-label">Selesai</p>
+      <div class="stat-card spotlight reveal" data-tone="success" style="--d: 6">
+        <div class="stat-top">
+          <p class="stat-label">Selesai</p>
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+        </div>
         <div class="stat-value" id="doneCount">0</div>
         <p class="stat-foot">Sesi ditutup</p>
       </div>
     </section>
 
     <main class="layout">
-      <aside class="side-tabs">
+      <aside class="side-tabs reveal" style="--d: 6">
         <p class="eyebrow">Navigasi</p>
-        <button class="tab-button active" data-target="formSection">Borang Sesi</button>
-        <button class="tab-button" data-target="listSection">Senarai Sesi</button>
-        <button class="tab-button" data-target="statsSection">Analisa</button>
+        <button class="tab-button active" data-target="formSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><span>Borang Sesi</span></button>
+        <button class="tab-button" data-target="listSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>Senarai Sesi</span></button>
+        <button class="tab-button" data-target="statsSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg><span>Analisa</span></button>
         <!-- <button class="tab-button" data-target="uploadSection">Upload Gambar</button> -->
       </aside>
 
       <div class="content-panels">
-        <section class="panel form-panel" id="formSection">
+        <section class="panel form-panel spotlight" id="formSection">
           <div class="panel-header">
             <div>
               <p class="eyebrow">Borang Sesi</p>
@@ -236,7 +251,7 @@
 
             <div class="field">
             <label for="location">Lokasi sesi</label>
-            <input id="location" name="location" type="text" placeholder="Pejabat CSD / Bilik kaunseling" />
+            <input id="location" name="location" type="text" placeholder="Pejabat kaunseling / Bilik kaunseling" />
           </div>
 
             <div class="actions span-2">
@@ -247,7 +262,7 @@
           </form>
         </section>
 
-        <section class="panel log-panel hidden" id="listSection">
+        <section class="panel log-panel spotlight hidden" id="listSection">
           <div class="panel-header">
             <div>
               <p class="eyebrow">Senarai Sesi</p>
@@ -286,7 +301,7 @@
           </div>
         </section>
 
-        <section class="panel hidden" id="statsSection">
+        <section class="panel spotlight hidden" id="statsSection">
           <div class="panel-header">
             <div>
               <p class="eyebrow">Analisa</p>
@@ -305,17 +320,17 @@
             </div>
           </div>
           <div class="stat-grid">
-            <div class="stat-card">
+            <div class="stat-card" data-tone="cyan">
               <p class="stat-label">Minggu ini</p>
               <div class="stat-value" id="weeklyTotal">0</div>
               <p class="stat-foot" id="weeklyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tone="accent">
               <p class="stat-label">Bulan ini</p>
               <div class="stat-value" id="monthlyTotal">0</div>
               <p class="stat-foot" id="monthlyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
             </div>
-          <div class="stat-card">
+          <div class="stat-card" data-tone="success">
             <p class="stat-label">Tahun ini</p>
             <div class="stat-value" id="yearlyTotal">0</div>
             <p class="stat-foot" id="yearlyFoot">0 dalam proses | 0 susulan | 0 perlu di panggil | 0 selesai</p>
@@ -397,13 +412,13 @@
     <div class="print-card">
       <header class="print-header">
         <div>
-          <p class="eyebrow print-eyebrow">CSD - CLIENTS SESSION DATA</p>
+          <p class="eyebrow print-eyebrow">SESIQ &middot; SISTEM REKOD SESI KLIEN</p>
           <h2>Borang Rekod Sesi</h2>
           <p class="print-hint">Cetak satu muka surat untuk simpanan fail guru.</p>
           <p class="print-meta">Dicetak pada <span id="printGeneratedAt">-</span></p>
         </div>
         <div class="print-logo-block">
-          <img src="logo.jpeg" alt="Logo CSD" class="print-logo" />
+          <img src="logo.jpeg" alt="Logo SESIQ" class="print-logo" />
           <div class="print-meta">Kaunselor: <span id="printRecordedBy">-</span></div>
         </div>
       </header>
@@ -478,6 +493,7 @@
     </div>
   </div>
 
+  <script src="ui.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDURmoIpmfcrxG8I6Uf7aBCBsiS-T0Hv8k",
@@ -774,8 +790,9 @@
       if (!currentUser) return;
       db.ref(`sessions/${currentUser.uid}/${id}`).remove().catch((error) => {
         console.error('Ralat memadam rekod:', error);
-        alert('Gagal memadam rekod. Sila cuba lagi.');
+        SesiqUI.showToast('Gagal memadam rekod. Sila cuba lagi.', 'error', 5000);
       });
+      SesiqUI.showToast('Rekod dipadam.', 'info');
       if (editingId === id) cancelEdit();
     };
 
@@ -826,11 +843,11 @@
       const month = getPeriodCounts('month');
       const year = getPeriodCounts('year');
       const foot = (s) => `${s.inProgress} dalam proses | ${s.followUp} susulan | ${s.call} perlu di panggil | ${s.done} selesai`;
-      weeklyTotal.textContent = week.total;
+      SesiqUI.animateCount(weeklyTotal, week.total);
       weeklyFoot.textContent = foot(week);
-      monthlyTotal.textContent = month.total;
+      SesiqUI.animateCount(monthlyTotal, month.total);
       monthlyFoot.textContent = foot(month);
-      yearlyTotal.textContent = year.total;
+      SesiqUI.animateCount(yearlyTotal, year.total);
       yearlyFoot.textContent = foot(year);
       updateChart(chartPeriod);
     };
@@ -847,7 +864,7 @@
         const pct = (value / maxVal) * 100;
         fill.style.height = `${Math.max(pct, 8)}%`;
         fill.style.opacity = value === 0 ? 0.25 : 1;
-        valueEl.textContent = value;
+        SesiqUI.animateCount(valueEl, value);
       });
       chartToggleButtons.forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.period === period);
@@ -875,7 +892,7 @@
       setPrintValue(printLocation, entry.location || '-');
       setPrintValue(printNotes, entry.sessionNotes || '-');
       setPrintValue(printActions, entry.actions || '-');
-      setPrintValue(printRecordedBy, entry.recordedBy || 'Staf CSD');
+      setPrintValue(printRecordedBy, entry.recordedBy || 'Staf SESIQ');
       setPrintValue(printCreatedAt, formatDateTime(entry.createdAt));
       setPrintValue(printGeneratedAt, formatDateTime(Date.now()));
       printSheet.classList.remove('hidden');
@@ -918,15 +935,16 @@
       const followUp = entries.filter((i) => i.status === 'Perlu susulan').length;
       const callNeeded = entries.filter((i) => i.status === 'Perlu di panggil').length;
       const done = entries.filter((i) => i.status === 'Selesai').length;
-      totalCount.textContent = total;
-      inProgressCount.textContent = inProgress;
-      followUpCount.textContent = followUp;
-      callCount.textContent = callNeeded;
-      doneCount.textContent = done;
+      SesiqUI.animateCount(totalCount, total);
+      SesiqUI.animateCount(inProgressCount, inProgress);
+      SesiqUI.animateCount(followUpCount, followUp);
+      SesiqUI.animateCount(callCount, callNeeded);
+      SesiqUI.animateCount(doneCount, done);
       updateStats();
 
-      filtered.forEach((item) => {
+      filtered.forEach((item, index) => {
         const row = document.createElement('tr');
+        row.style.setProperty('--i', index);
         const statusText = item.status || '-';
         const statusClass = (item.status || '').trim().replace(/\s+/g, '-').toLowerCase();
         const safeId = escapeHtml(item.id);
@@ -946,7 +964,7 @@
             <div class="tag tight">${escapeHtml(item.sessionType || '-')}</div>
             <div class="status ${escapeHtml(statusClass)}">${escapeHtml(statusText)}</div>
             <div class="cell-sub">Fokus: ${escapeHtml(item.serviceFocus || '-')}</div>
-            <div class="cell-sub">Kaunselor: ${escapeHtml(item.recordedBy || 'Staf CSD')}</div>
+            <div class="cell-sub">Kaunselor: ${escapeHtml(item.recordedBy || 'Staf SESIQ')}</div>
           </td>
           <td>
             <div class="cell-strong">${escapeHtml(item.sessionNotes)}</div>
@@ -1023,7 +1041,7 @@
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (!currentUser) {
-        alert('Sila log masuk semula.');
+        SesiqUI.showToast('Sila log masuk semula.', 'error');
         return;
       }
       const formData = new FormData(form);
@@ -1033,7 +1051,7 @@
       const programSemester = data.programSemester ? `Sem ${data.programSemester}` : '';
       const classCombined = [programCode, programLevel, programSemester].filter(Boolean).join(' - ');
       const recordedByValueRaw = data.recordedBy === 'Lain-lain' ? data.recordedByOther : data.recordedBy;
-      const recordedByValue = (recordedByValueRaw || '').trim() || (currentUser?.displayName || currentUser?.email || 'Staf CSD');
+      const recordedByValue = (recordedByValueRaw || '').trim() || (currentUser?.displayName || currentUser?.email || 'Staf SESIQ');
       const referenceNumberValue =
         (data.referenceNumber || '').trim() || getNextReferenceNumber(data.sessionDate);
       const basePayload = {
@@ -1056,7 +1074,8 @@
 
       const submitLabel = submitButton.textContent;
       submitButton.disabled = true;
-      submitButton.textContent = 'Menyimpan...';
+      const wasEditing = Boolean(editingId);
+      submitButton.classList.add('loading');
       try {
         if (editingId) {
           await db.ref(`sessions/${currentUser.uid}/${editingId}`).update(basePayload);
@@ -1066,14 +1085,15 @@
             createdAt: firebase.database.ServerValue.TIMESTAMP
           });
         }
-        submitButton.textContent = submitLabel;
         cancelEdit();
+        SesiqUI.showToast(wasEditing ? 'Rekod dikemaskini.' : 'Rekod sesi disimpan.');
       } catch (error) {
         // Kekalkan isi borang supaya data tidak hilang
         console.error('Ralat menyimpan rekod:', error);
-        alert('Gagal menyimpan rekod. Semak sambungan internet dan cuba lagi.');
+        SesiqUI.showToast('Gagal menyimpan rekod. Semak sambungan internet dan cuba lagi.', 'error', 6000);
         submitButton.textContent = submitLabel;
       } finally {
+        submitButton.classList.remove('loading');
         submitButton.disabled = false;
       }
     });
@@ -1099,8 +1119,9 @@
       if (!currentUser) return;
       db.ref(`sessions/${currentUser.uid}`).remove().catch((error) => {
         console.error('Ralat memadam semua rekod:', error);
-        alert('Gagal memadam rekod. Sila cuba lagi.');
+        SesiqUI.showToast('Gagal memadam rekod. Sila cuba lagi.', 'error', 5000);
       });
+      SesiqUI.showToast('Semua rekod dipadam.', 'info');
       cancelEdit();
     });
 
@@ -1154,7 +1175,7 @@
 
     const downloadCsv = (items, filenamePrefix, emptyMessage = 'Tiada rekod dalam tempoh ini.') => {
       if (!items.length) {
-        alert(emptyMessage);
+        SesiqUI.showToast(emptyMessage, 'info');
         return;
       }
       const csv = formatCsvRows(items);
@@ -1167,6 +1188,7 @@
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+      SesiqUI.showToast(`CSV dimuat turun (${items.length} rekod).`);
     };
 
     const getEntriesByPeriod = (period) => {
@@ -1281,7 +1303,7 @@
         auth.signOut().then(() => {
           detachEntries();
           detachUploads();
-          window.location.href = 'index.html';
+          SesiqUI.leaveTo('index.html');
         });
       });
     }
@@ -1307,8 +1329,9 @@
           return;
         }
         currentUser = user;
-        const displayName = user.displayName || user.email || 'Staf CSD';
+        const displayName = user.displayName || user.email || 'Staf SESIQ';
         userBadge.textContent = `Guru: ${displayName}`;
+        userBadge.title = displayName;
         populateMonthYear();
         listenEntries(user.uid);
         listenUploads(user.uid);
